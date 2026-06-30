@@ -75,3 +75,39 @@ Content-Type: application/json
 x-user-id: {{owner}}
 
 { "reason": "Trùng lịch hội trường" }
+
+### --- Budget (organizer only; authorized via cross-context query) ---
+
+### Create budget
+# @name createBudget
+POST {{base}}/events/{{eventId}}/budget
+Content-Type: application/json
+x-user-id: {{owner}}
+
+{ "currency": "VND" }
+
+@budgetId = {{createBudget.response.body.id}}
+
+### Add a budget item (dự toán)
+# @name addItem
+POST {{base}}/budgets/{{budgetId}}/items
+Content-Type: application/json
+x-user-id: {{owner}}
+
+{ "name": "Thuê hội trường", "category": "VENUE", "plannedAmount": 5000000 }
+
+@itemId = {{addItem.response.body.id}}
+
+### Record actual spend + invoice (chi thực tế + hóa đơn)
+PATCH {{base}}/budgets/{{budgetId}}/items/{{itemId}}/actual
+Content-Type: application/json
+x-user-id: {{owner}}
+
+{ "actualAmount": 5500000, "invoiceUrl": "https://drive.google.com/inv1" }
+
+### Budget summary — planned vs actual + variance
+GET {{base}}/events/{{eventId}}/budget
+
+### Finalize the budget (quyết toán — locks edits)
+POST {{base}}/budgets/{{budgetId}}/finalize
+x-user-id: {{owner}}

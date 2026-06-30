@@ -24,7 +24,7 @@ export async function createTestApp(): Promise<TestContext> {
 
 export async function cleanDatabase(dataSource: DataSource): Promise<void> {
   await dataSource.query(
-    'TRUNCATE TABLE "registrations", "events", "outbox_messages" RESTART IDENTITY CASCADE',
+    'TRUNCATE TABLE "registrations", "budgets", "events", "outbox_messages" RESTART IDENTITY CASCADE',
   );
 }
 

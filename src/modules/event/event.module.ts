@@ -13,6 +13,7 @@ import { CancelEventService } from './commands/cancel-event/cancel-event.service
 import { CancelEventHttpController } from './commands/cancel-event/cancel-event.http.controller';
 import { GetEventListQueryHandler } from './queries/get-event-list/get-event-list.query-handler';
 import { GetEventListHttpController } from './queries/get-event-list/get-event-list.http.controller';
+import { IsEventOrganizerQueryHandler } from './queries/is-event-organizer/is-event-organizer.query-handler';
 import { EventRepository } from './database/event.repository';
 import { EventMapper } from './database/event.mapper';
 
@@ -34,6 +35,7 @@ import { EventMapper } from './database/event.mapper';
     RescheduleEventService,
     CancelEventService,
     GetEventListQueryHandler,
+    IsEventOrganizerQueryHandler,
     { provide: EVENT_REPOSITORY, useClass: EventRepository }, // port -> adapter
   ],
 })

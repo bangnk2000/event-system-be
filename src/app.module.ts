@@ -10,6 +10,7 @@ import { DatabaseModule } from './database.module';
 import { EventModule } from '@modules/event/event.module';
 import { ParticipationModule } from '@modules/participation/participation.module';
 import { NotificationModule } from '@modules/notification/notification.module';
+import { BudgetModule } from '@modules/budget/budget.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { NotificationModule } from '@modules/notification/notification.module';
     EventModule,
     ParticipationModule,
     NotificationModule,
+    BudgetModule,
   ],
 })
 export class AppModule {}

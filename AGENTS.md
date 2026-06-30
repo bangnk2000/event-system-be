@@ -44,9 +44,11 @@ pnpm build · pnpm typecheck · pnpm test · pnpm arch · pnpm migration:run
 ```
 
 ## Contexts
-- `event` (core) · `participation` (core) · `notification` (supporting). Add `iam`, `budget` next.
-- Cross-context: `notification` reacts to relayed domain events by event-name string via `@OnEvent`
-  (never imports another module). Outbox is the durable bridge.
+- `event` (core) · `participation` (core) · `budget` (supporting) · `notification` (supporting). Add `iam` next.
+- Cross-context (no module-to-module import):
+  - `notification` reacts to relayed domain events by event-name string via `@OnEvent` (outbox is the bridge).
+  - `budget` authorizes via `IsEventOrganizerQuery` over the QueryBus — the query class lives in
+    `libs/contracts/event/` and is imported by both sides (the documented shared-contracts pattern).
 
 ## Known skeleton shortcuts (replace before prod)
 - Auth: `GoogleSsoGuard` verifies `Authorization: Bearer <google-id-token>` when `GOOGLE_CLIENT_ID`
