@@ -7,6 +7,7 @@ import { LoggerModule } from '@libs/logger/logger.module';
 import { OutboxModule } from '@libs/outbox/outbox.module';
 import { DatabaseModule } from './database.module';
 import { EventModule } from '@modules/event/event.module';
+import { ParticipationModule } from '@modules/participation/participation.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { EventModule } from '@modules/event/event.module';
     DatabaseModule,
     OutboxModule,
     EventModule,
+    ParticipationModule,
   ],
 })
 export class AppModule {}

@@ -3,12 +3,13 @@ import { DataSource } from 'typeorm';
 // Relative imports (not path aliases) so the TypeORM CLI resolves them without extra registration.
 import { EventOrmEntity } from './modules/event/database/event.persistence.model';
 import { OutboxMessageOrmEntity } from './libs/outbox/outbox.entity';
+import { RegistrationOrmEntity } from './modules/participation/database/registration.persistence.model';
 
 /** DataSource used by the TypeORM CLI for migrations (`pnpm migration:run`). */
 export const AppDataSource = new DataSource({
   type: 'postgres',
   url: process.env.DATABASE_URL ?? 'postgres://postgres:postgres@localhost:5432/event_system',
-  entities: [EventOrmEntity, OutboxMessageOrmEntity],
+  entities: [EventOrmEntity, OutboxMessageOrmEntity, RegistrationOrmEntity],
   migrations: ['src/migrations/*.ts'],
   synchronize: false,
 });
