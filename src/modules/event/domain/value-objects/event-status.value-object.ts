@@ -11,11 +11,29 @@ export enum EventStatusEnum {
   CANCELLED = 'CANCELLED',
 }
 
-/**
- * Self-validating status VO. The fuller state machine (publish/openRegistration/reschedule/cancel
- * with auto close+reopen on reschedule) is documented in the design doc and added with those slices;
- * the walking skeleton only needs draft() + reconstitution.
- */
+/** Allowed forward transitions. reschedule keeps the same status (handled in the aggregate). */
+const TRANSITIONS: Record<EventStatusEnum, EventStatusEnum[]> = {
+  [EventStatusEnum.DRAFT]: [EventStatusEnum.PUBLISHED, EventStatusEnum.CANCELLED],
+  [EventStatusEnum.PUBLISHED]: [
+    EventStatusEnum.REGISTRATION_OPEN,
+    EventStatusEnum.ONGOING,
+    EventStatusEnum.CANCELLED,
+  ],
+  [EventStatusEnum.REGISTRATION_OPEN]: [
+    EventStatusEnum.REGISTRATION_CLOSED,
+    EventStatusEnum.ONGOING,
+    EventStatusEnum.CANCELLED,
+  ],
+  [EventStatusEnum.REGISTRATION_CLOSED]: [
+    EventStatusEnum.REGISTRATION_OPEN,
+    EventStatusEnum.ONGOING,
+    EventStatusEnum.CANCELLED,
+  ],
+  [EventStatusEnum.ONGOING]: [EventStatusEnum.COMPLETED, EventStatusEnum.CANCELLED],
+  [EventStatusEnum.COMPLETED]: [],
+  [EventStatusEnum.CANCELLED]: [],
+};
+
 export class EventStatus extends ValueObject<string> {
   protected validate({ value }: DomainPrimitive<string>): void {
     if (!Object.values(EventStatusEnum).includes(value as EventStatusEnum)) {
@@ -35,11 +53,15 @@ export class EventStatus extends ValueObject<string> {
     return this.value === EventStatusEnum.COMPLETED || this.value === EventStatusEnum.CANCELLED;
   }
 
+  canTransitionTo(target: EventStatusEnum): boolean {
+    return TRANSITIONS[this.value].includes(target);
+  }
+
   static draft(): EventStatus {
     return new EventStatus({ value: EventStatusEnum.DRAFT });
   }
 
-  /** Reconstitution from persistence (no transition checks). */
+  /** Reconstitution / explicit transition target (no checks — the aggregate guards transitions). */
   static of(value: string): EventStatus {
     return new EventStatus({ value });
   }

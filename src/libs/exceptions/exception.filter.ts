@@ -10,6 +10,7 @@ import { ExceptionBase } from './exception.base';
 import { ArgumentInvalidException } from './argument-invalid.exception';
 import { NotFoundException } from './not-found.exception';
 import { ConflictException } from './conflict.exception';
+import { ForbiddenException } from './forbidden.exception';
 
 /**
  * Maps THROWN exceptions to HTTP responses. It never sees domain errors — controllers match() the
@@ -36,6 +37,9 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       body = { ...exception.toJSON() };
     } else if (exception instanceof ConflictException) {
       status = HttpStatus.CONFLICT;
+      body = { ...exception.toJSON() };
+    } else if (exception instanceof ForbiddenException) {
+      status = HttpStatus.FORBIDDEN;
       body = { ...exception.toJSON() };
     } else if (exception instanceof ExceptionBase) {
       status = HttpStatus.INTERNAL_SERVER_ERROR;

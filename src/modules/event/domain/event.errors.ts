@@ -11,3 +11,27 @@ export class InvalidEventScheduleError extends ExceptionBase {
     super(message);
   }
 }
+
+export class EventNotFoundError extends ExceptionBase {
+  readonly code = 'EVENT.NOT_FOUND';
+
+  constructor() {
+    super('Event not found');
+  }
+}
+
+export class NotOrganizerError extends ExceptionBase {
+  readonly code = 'EVENT.NOT_ORGANIZER';
+
+  constructor() {
+    super('Only an organizing committee member can perform this action');
+  }
+}
+
+export class InvalidEventStateError extends ExceptionBase {
+  readonly code = 'EVENT.INVALID_STATE';
+
+  constructor(action: string, currentState: string) {
+    super(`Cannot ${action} an event in state ${currentState}`);
+  }
+}

@@ -4,3 +4,4 @@ export * from './exception.base';
 export * from './argument-invalid.exception';
 export * from './not-found.exception';
 export * from './conflict.exception';
+export * from './forbidden.exception';
