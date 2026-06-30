@@ -5,6 +5,10 @@ export const configSchema = z.object({
   PORT: z.coerce.number().int().positive().default(3000),
   DATABASE_URL: z.string().url(),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
+  // Optional integrations — empty falls back to stubs / dev auth.
+  CHATWORK_API_TOKEN: z.string().optional(),
+  CHATWORK_ROOM_ID: z.string().optional(),
+  GOOGLE_CLIENT_ID: z.string().optional(),
 });
 
 export type AppConfig = z.infer<typeof configSchema>;

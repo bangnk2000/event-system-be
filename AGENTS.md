@@ -43,7 +43,14 @@ Infrastructure (database/*.repository, *.mapper, *.persistence.model; libs/db, l
 pnpm build · pnpm typecheck · pnpm test · pnpm arch · pnpm migration:run
 ```
 
+## Contexts
+- `event` (core) · `participation` (core) · `notification` (supporting). Add `iam`, `budget` next.
+- Cross-context: `notification` reacts to relayed domain events by event-name string via `@OnEvent`
+  (never imports another module). Outbox is the durable bridge.
+
 ## Known skeleton shortcuts (replace before prod)
-- Auth is stubbed via header `x-user-id` (`@CurrentUserId()`); real Google SSO is a later slice.
+- Auth: `GoogleSsoGuard` verifies `Authorization: Bearer <google-id-token>` when `GOOGLE_CLIENT_ID`
+  is set; otherwise falls back to the `x-user-id` header (dev). `@CurrentUserId()` = req.user.id ?? x-user-id.
 - Logger is a console adapter behind `LoggerPort` (pino is the prod choice).
-- `OutboxRelay` emits in-process via `EventEmitter2`; external ChatWork/Calendar/Drive adapters TBD.
+- `OutboxRelay` emits in-process via `EventEmitter2`; `NotifierPort` → `ChatWorkAdapter` logs a stub
+  when `CHATWORK_*` is unset. Calendar/Drive adapters + event-existence check on register are TBD.

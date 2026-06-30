@@ -1,15 +1,16 @@
 import { createParamDecorator, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 
 /**
- * SKELETON auth stub: reads the acting user id from the `x-user-id` header.
- * Replace with a real Google SSO guard that sets req.user from the verified token.
+ * Resolves the acting user id. Prefers req.user (set by GoogleSsoGuard from a verified ID token);
+ * falls back to the `x-user-id` header for dev/CI. Replace the fallback once SSO is enforced.
  */
 export const CurrentUserId = createParamDecorator(
   (_data: unknown, ctx: ExecutionContext): string => {
     const req = ctx.switchToHttp().getRequest();
-    const userId = req.headers['x-user-id'];
+    const user = req.user as { id?: string } | undefined;
+    const userId = user?.id ?? req.headers['x-user-id'];
     if (!userId || typeof userId !== 'string') {
-      throw new UnauthorizedException('Missing x-user-id header (auth stub)');
+      throw new UnauthorizedException('Missing authentication (Bearer token or x-user-id)');
     }
     return userId;
   },
