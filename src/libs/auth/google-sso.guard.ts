@@ -11,8 +11,11 @@ import { LOGGER_PORT, LoggerPort } from '@libs/ports/logger.port';
 
 /**
  * Verifies a Google ID token from `Authorization: Bearer <idToken>` and sets req.user.
- * Permissive when no Bearer header is present (dev falls back to the x-user-id stub) and when
- * GOOGLE_CLIENT_ID is unset — so enabling real SSO is just a config + header change, no code change.
+ *
+ * Enforcement is gated on GOOGLE_CLIENT_ID:
+ * - unset  → SSO not configured: permissive, dev falls back to the `x-user-id` stub.
+ * - set    → SSO enforced: a valid Bearer ID token is REQUIRED; missing/invalid → 401
+ *            (the `x-user-id` fallback is no longer reachable for protected routes).
  */
 @Injectable()
 export class GoogleSsoGuard implements CanActivate {
@@ -30,12 +33,17 @@ export class GoogleSsoGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
     const header: unknown = req.headers['authorization'];
-    if (typeof header !== 'string' || !header.startsWith('Bearer ')) return true; // dev fallback
-    if (!this.clientId) return true; // SSO not configured yet
+    const idToken =
+      typeof header === 'string' && header.startsWith('Bearer ')
+        ? header.slice('Bearer '.length)
+        : null;
+
+    if (!this.clientId) return true; // SSO not configured — dev fallback (x-user-id) allowed
+    if (idToken === null) throw new UnauthorizedException('Missing Google ID token'); // SSO enforced
 
     try {
       const ticket = await this.client.verifyIdToken({
-        idToken: header.slice('Bearer '.length),
+        idToken,
         audience: this.clientId,
       });
       const payload = ticket.getPayload();
