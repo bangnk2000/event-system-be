@@ -45,6 +45,16 @@ pnpm arch       # dependency-cruiser: domain thuần + module privacy
 pnpm test       # unit test domain + handler
 ```
 
+## Kiểm thử HTTP REST
+- **Tự động (supertest e2e)** — `test/*.e2e-spec.ts`, chạy thật qua HTTP vào app Nest:
+  ```bash
+  docker compose up -d        # cần PostgreSQL
+  pnpm test:e2e               # event + participation: 9 test
+  ```
+  *(NODE_ENV=test tự `synchronize` schema; mỗi test TRUNCATE bảng để cô lập.)*
+- **Thủ công** — mở [`api.http`](api.http) bằng REST Client (VS Code) / JetBrains HTTP client:
+  bộ request đã nối chuỗi (`{{createEvent.response.body.id}}`) cho toàn bộ luồng vòng đời + đăng ký.
+
 ## Còn thiếu (theo lộ trình)
 Google SSO thật (đang stub qua header `x-user-id`), i18n đầy đủ, các slice publish/reschedule/cancel,
 ChatWork/Calendar/Drive adapters, eslint boundaries + naming lint, e2e. Xem `AGENTS.md`.

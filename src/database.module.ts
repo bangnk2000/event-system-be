@@ -20,7 +20,7 @@ import { RegistrationOrmEntity } from '@modules/participation/database/registrat
           type: 'postgres',
           url: config.getOrThrow<string>('DATABASE_URL'),
           entities: [EventOrmEntity, OutboxMessageOrmEntity, RegistrationOrmEntity],
-          synchronize: config.get<string>('NODE_ENV') === 'development',
+          synchronize: config.get<string>('NODE_ENV') !== 'production',
           logging: false,
         });
         await dataSource.initialize();

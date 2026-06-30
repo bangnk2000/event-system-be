@@ -1,0 +1,77 @@
+### Event System BE — REST collection (VS Code "REST Client" / JetBrains http client)
+### Prereqs: pnpm start (with docker compose postgres up). Auth uses the x-user-id dev stub.
+
+@base = http://localhost:3000/v1
+@owner = 11111111-1111-1111-1111-111111111111
+@userA = 33333333-3333-3333-3333-333333333333
+@userB = 44444444-4444-4444-4444-444444444444
+
+### Create an event
+# @name createEvent
+POST {{base}}/events
+Content-Type: application/json
+x-user-id: {{owner}}
+
+{
+  "titleVi": "Họp toàn công ty",
+  "titleJa": "全社ミーティング",
+  "type": "INTERNAL_MEETING",
+  "startAt": "2026-07-10T02:00:00.000Z",
+  "endAt": "2026-07-10T04:00:00.000Z",
+  "registrationMode": "INDIVIDUAL"
+}
+
+@eventId = {{createEvent.response.body.id}}
+
+### List events (localized title)
+GET {{base}}/events?lang=ja
+
+### Publish (organizer only)
+POST {{base}}/events/{{eventId}}/publish
+x-user-id: {{owner}}
+
+### Open registration
+POST {{base}}/events/{{eventId}}/open-registration
+x-user-id: {{owner}}
+
+### Reschedule (auto close/reopen if registration is open)
+PATCH {{base}}/events/{{eventId}}/schedule
+Content-Type: application/json
+x-user-id: {{owner}}
+
+{ "startAt": "2026-08-01T02:00:00.000Z", "endAt": "2026-08-01T04:00:00.000Z" }
+
+### Register (individual)
+# @name register
+POST {{base}}/events/{{eventId}}/registrations
+Content-Type: application/json
+x-user-id: {{userA}}
+
+{ "mode": "INDIVIDUAL" }
+
+@registrationId = {{register.response.body.id}}
+
+### Register (team)
+POST {{base}}/events/{{eventId}}/registrations
+Content-Type: application/json
+x-user-id: {{userB}}
+
+{ "mode": "TEAM", "teamName": "Team Alpha", "memberIds": ["44444444-4444-4444-4444-444444444444"] }
+
+### List registrations
+GET {{base}}/events/{{eventId}}/registrations
+
+### Check-in (organizer scans QR)
+POST {{base}}/registrations/{{registrationId}}/check-in
+x-user-id: {{owner}}
+
+### Cancel registration (registrant only)
+POST {{base}}/registrations/{{registrationId}}/cancel
+x-user-id: {{userA}}
+
+### Cancel the event
+POST {{base}}/events/{{eventId}}/cancel
+Content-Type: application/json
+x-user-id: {{owner}}
+
+{ "reason": "Trùng lịch hội trường" }
