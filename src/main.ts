@@ -5,6 +5,7 @@ import { NestFactory } from '@nestjs/core';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 import { GlobalExceptionFilter } from '@libs/exceptions/exception.filter';
+import { buildOpenApiDocument, setupSwaggerUi } from './swagger';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
@@ -15,6 +16,8 @@ async function bootstrap(): Promise<void> {
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }),
   );
   app.useGlobalFilters(new GlobalExceptionFilter());
+
+  setupSwaggerUi(app, buildOpenApiDocument(app)); // interactive docs at /docs (+ raw at /docs-json)
 
   const config = app.get(ConfigService);
   const port = config.get<number>('PORT') ?? 3000;

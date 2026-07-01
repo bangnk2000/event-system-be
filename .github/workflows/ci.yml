@@ -51,6 +51,9 @@ jobs:
       - name: Architecture map is fresh
         run: pnpm map:check
 
+      - name: OpenAPI spec is fresh
+        run: pnpm openapi:check
+
       - name: Lint (ESLint + boundaries)
         run: pnpm lint
 

@@ -1,19 +1,25 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
+import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { match } from 'oxide.ts';
 import { ArgumentInvalidException } from '@libs/exceptions';
 import { IdResponse } from '@libs/ddd';
+import { ApiStandardErrors, IdResponseDto } from '@libs/api-docs';
 import { CurrentUserId } from '@libs/decorators/current-user-id.decorator';
 import { CreateEventCommand } from './create-event.command';
 import { CreateEventRequestDto } from './create-event.request.dto';
 import { CreateEventResult } from './create-event.service';
 import { InvalidEventScheduleError } from '../../domain/event.errors';
 
+@ApiTags('events')
 @Controller({ path: 'events', version: '1' })
 export class CreateEventHttpController {
   constructor(private readonly commandBus: CommandBus) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a draft event', description: 'The caller becomes the organizer.' })
+  @ApiCreatedResponse({ type: IdResponseDto, description: 'Event created; returns the new event id.' })
+  @ApiStandardErrors(400)
   async create(
     @Body() body: CreateEventRequestDto,
     @CurrentUserId() organizerId: string,
