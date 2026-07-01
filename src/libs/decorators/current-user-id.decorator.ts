@@ -2,7 +2,8 @@ import { createParamDecorator, ExecutionContext, UnauthorizedException } from '@
 
 /**
  * Resolves the acting user id. Prefers req.user (set by GoogleSsoGuard from a verified ID token);
- * falls back to the `x-user-id` header for dev/CI. Replace the fallback once SSO is enforced.
+ * falls back to the `x-user-id` header for dev/CI. The fallback is only reachable when SSO is NOT
+ * enforced — once GOOGLE_CLIENT_ID is set, GoogleSsoGuard rejects requests without a valid token.
  */
 export const CurrentUserId = createParamDecorator(
   (_data: unknown, ctx: ExecutionContext): string => {
