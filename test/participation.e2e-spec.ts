@@ -19,12 +19,31 @@ describe('Participation API (e2e)', () => {
     await closeTestApp(ctx);
   });
 
+  /** Creates an event and walks it to REGISTRATION_OPEN (publish -> open-registration). */
   const createEvent = async (): Promise<string> => {
     const res = await http()
       .post('/v1/events')
       .set('x-user-id', ORG)
       .send({
         titleVi: 'Giải cầu lông',
+        type: 'TEAM_BUILDING',
+        startAt: '2026-07-10T02:00:00.000Z',
+        endAt: '2026-07-10T04:00:00.000Z',
+        registrationMode: 'BOTH',
+      });
+    const eventId = res.body.id as string;
+    await http().post(`/v1/events/${eventId}/publish`).set('x-user-id', ORG);
+    await http().post(`/v1/events/${eventId}/open-registration`).set('x-user-id', ORG);
+    return eventId;
+  };
+
+  /** Creates an event but leaves it in DRAFT (registration not yet open). */
+  const createDraftEvent = async (): Promise<string> => {
+    const res = await http()
+      .post('/v1/events')
+      .set('x-user-id', ORG)
+      .send({
+        titleVi: 'Sự kiện nháp',
         type: 'TEAM_BUILDING',
         startAt: '2026-07-10T02:00:00.000Z',
         endAt: '2026-07-10T04:00:00.000Z',
@@ -46,6 +65,24 @@ describe('Participation API (e2e)', () => {
       .set('x-user-id', USER_A)
       .send({ mode: 'INDIVIDUAL' });
     expect(dup.status).toBe(409);
+  });
+
+  it('rejects registration when the event is not open (409)', async () => {
+    const eventId = await createDraftEvent();
+    const res = await http()
+      .post(`/v1/events/${eventId}/registrations`)
+      .set('x-user-id', USER_A)
+      .send({ mode: 'INDIVIDUAL' });
+    expect(res.status).toBe(409);
+  });
+
+  it('rejects registration for a non-existent event (404)', async () => {
+    const missing = '99999999-9999-9999-9999-999999999999';
+    const res = await http()
+      .post(`/v1/events/${missing}/registrations`)
+      .set('x-user-id', USER_A)
+      .send({ mode: 'INDIVIDUAL' });
+    expect(res.status).toBe(404);
   });
 
   it('rejects a team registration without a team name (400)', async () => {
