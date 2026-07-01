@@ -793,6 +793,110 @@
         ]
       }
     },
+    "/v1/notification-preferences": {
+      "put": {
+        "description": "Opt in or out of one notification type. Returns the full preference set.",
+        "operationId": "UpdateNotificationPreferenceHttpController_update_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNotificationPreferenceRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationPreferenceResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed or invalid argument.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Update the current user’s notification preference",
+        "tags": [
+          "notifications"
+        ]
+      },
+      "get": {
+        "description": "Returns every notification type with its enabled flag (defaults to all enabled).",
+        "operationId": "GetNotificationPreferencesHttpController_get_v1",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationPreferenceResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get the current user’s notification preferences",
+        "tags": [
+          "notifications"
+        ]
+      }
+    },
     "/v1/events/{eventId}/budget": {
       "post": {
         "description": "Authorized via cross-context organizer check; only organizers may create it.",
@@ -1242,6 +1346,10 @@
     {
       "name": "budget",
       "description": "Event budgeting: plan, record actuals, finalize, summary"
+    },
+    {
+      "name": "notifications",
+      "description": "Per-user notification preferences (opt in/out by type)"
     }
   ],
   "servers": [],
@@ -1547,6 +1655,55 @@
           "teamName",
           "status",
           "checkedIn"
+        ]
+      },
+      "NotificationType": {
+        "type": "string",
+        "enum": [
+          "REGISTRATION_CANCELLED"
+        ],
+        "description": "Which notification type to configure."
+      },
+      "UpdateNotificationPreferenceRequestDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "Which notification type to configure.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NotificationType"
+              }
+            ]
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "true = receive this notification; false = opt out."
+          }
+        },
+        "required": [
+          "type",
+          "enabled"
+        ]
+      },
+      "NotificationPreferenceResponseDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The user these preferences belong to."
+          },
+          "preferences": {
+            "type": "object",
+            "description": "Enabled flag per notification type. true = the user receives it, false = opted out. Every known type is always present.",
+            "example": {
+              "REGISTRATION_CANCELLED": true
+            }
+          }
+        },
+        "required": [
+          "userId",
+          "preferences"
         ]
       },
       "CreateBudgetRequestDto": {
