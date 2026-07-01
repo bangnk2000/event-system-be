@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { DataSource } from 'typeorm';
 import {
