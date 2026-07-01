@@ -1,0 +1,4 @@
+# Keep docs/architecture-map.md in sync and stage it so the commit is never stale
+# (mirrors CI's `pnpm map:check`). See scripts/gen-map.mjs.
+pnpm map
+git add docs/architecture-map.md
