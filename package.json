@@ -16,6 +16,8 @@
     "test:cov": "jest --coverage",
     "test:e2e": "jest --config ./jest-e2e.config.ts --runInBand --forceExit",
     "arch": "depcruise src",
+    "map": "node scripts/gen-map.mjs",
+    "map:check": "node scripts/gen-map.mjs && git diff --exit-code -- docs/architecture-map.md",
     "migration:run": "typeorm-ts-node-commonjs migration:run -d src/data-source.ts",
     "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/data-source.ts"
   },

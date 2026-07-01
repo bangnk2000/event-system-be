@@ -38,9 +38,16 @@ Infrastructure (database/*.repository, *.mapper, *.persistence.model; libs/db, l
 `*.request.dto.ts` · `*.response.dto.ts` · `*.repository.port.ts` · `*.repository.ts` ·
 `*.mapper.ts` · `*.persistence.model.ts` · `*.module.ts` · `*.di-tokens.ts`. Dirs = kebab-case.
 
+## Start here (minimal context)
+Read this file + [`docs/architecture-map.md`](docs/architecture-map.md) (auto-generated inventory:
+every slice → folder + endpoint, every domain event → raiser + consumer, every contract). That is the
+full surface — do NOT grep the repo to rediscover it. For a task, open only the one slice folder + its
+aggregate entity; delegate any wider search to a subagent. After adding/removing a slice, event, or
+contract, run `pnpm map` (CI's `map:check` fails if the committed map is stale).
+
 ## Commands
 ```
-pnpm build · pnpm typecheck · pnpm test · pnpm arch · pnpm migration:run
+pnpm build · pnpm typecheck · pnpm test · pnpm arch · pnpm map · pnpm migration:run
 ```
 
 ## Contexts

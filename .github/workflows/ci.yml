@@ -48,6 +48,9 @@ jobs:
       - name: Architecture rules (dependency-cruiser)
         run: pnpm arch
 
+      - name: Architecture map is fresh
+        run: pnpm map:check
+
       - name: Lint (ESLint + boundaries)
         run: pnpm lint
 
