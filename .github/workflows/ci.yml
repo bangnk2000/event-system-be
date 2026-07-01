@@ -48,8 +48,8 @@ jobs:
       - name: Architecture rules (dependency-cruiser)
         run: pnpm arch
 
-      - name: Unit tests
-        run: pnpm test
+      - name: Unit tests (with coverage gate)
+        run: pnpm test:cov
 
       - name: E2E tests (HTTP)
         run: pnpm test:e2e

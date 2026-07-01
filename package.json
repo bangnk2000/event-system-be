@@ -12,6 +12,7 @@
     "start:dev": "node -r ts-node/register -r tsconfig-paths/register --watch src/main.ts",
     "typecheck": "tsc --noEmit",
     "test": "jest",
+    "test:cov": "jest --coverage",
     "test:e2e": "jest --config ./jest-e2e.config.ts --runInBand --forceExit",
     "arch": "depcruise src",
     "migration:run": "typeorm-ts-node-commonjs migration:run -d src/data-source.ts",
