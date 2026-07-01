@@ -1,18 +1,25 @@
 import { Body, Controller, Param, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
+import { ApiCreatedResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { match } from 'oxide.ts';
 import { IdResponse } from '@libs/ddd';
+import { ApiStandardErrors, IdResponseDto } from '@libs/api-docs';
 import { CurrentUserId } from '@libs/decorators/current-user-id.decorator';
 import { AddBudgetItemCommand } from './add-budget-item.command';
 import { AddBudgetItemRequestDto } from './add-budget-item.request.dto';
 import { AddBudgetItemResult } from './add-budget-item.service';
 import { throwBudgetHttpError } from '../map-budget-error';
 
+@ApiTags('budget')
 @Controller({ path: 'budgets', version: '1' })
 export class AddBudgetItemHttpController {
   constructor(private readonly commandBus: CommandBus) {}
 
   @Post(':budgetId/items')
+  @ApiOperation({ summary: 'Add a planned line item to a budget' })
+  @ApiParam({ name: 'budgetId', format: 'uuid' })
+  @ApiCreatedResponse({ type: IdResponseDto, description: 'Item added; returns the item id.' })
+  @ApiStandardErrors(403, 404, 409)
   async addItem(
     @Param('budgetId') budgetId: string,
     @Body() body: AddBudgetItemRequestDto,

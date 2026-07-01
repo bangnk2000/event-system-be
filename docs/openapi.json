@@ -1,0 +1,1702 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/v1/events": {
+      "post": {
+        "description": "The caller becomes the organizer.",
+        "operationId": "CreateEventHttpController_create_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEventRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Event created; returns the new event id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed or invalid argument.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a draft event",
+        "tags": [
+          "events"
+        ]
+      },
+      "get": {
+        "description": "Titles localized to the requested language.",
+        "operationId": "GetEventListHttpController_list_v1",
+        "parameters": [
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "description": "Language for localized titles (default vi).",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "vi",
+                "ja"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventListItemDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "List events",
+        "tags": [
+          "events"
+        ]
+      }
+    },
+    "/v1/events/{id}/publish": {
+      "post": {
+        "operationId": "PublishEventHttpController_publish_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state (invalid transition, duplicate, locked).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Publish a draft event",
+        "tags": [
+          "events"
+        ]
+      }
+    },
+    "/v1/events/{id}/open-registration": {
+      "post": {
+        "operationId": "OpenRegistrationHttpController_open_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state (invalid transition, duplicate, locked).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Open registration for a published event",
+        "tags": [
+          "events"
+        ]
+      }
+    },
+    "/v1/events/{id}/schedule": {
+      "patch": {
+        "description": "If registration is open it is auto-closed then reopened around the change.",
+        "operationId": "RescheduleEventHttpController_reschedule_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RescheduleEventRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed or invalid argument.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state (invalid transition, duplicate, locked).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Reschedule an event",
+        "tags": [
+          "events"
+        ]
+      }
+    },
+    "/v1/events/{id}/cancel": {
+      "post": {
+        "operationId": "CancelEventHttpController_cancel_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelEventRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state (invalid transition, duplicate, locked).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Cancel an event",
+        "tags": [
+          "events"
+        ]
+      }
+    },
+    "/v1/events/{eventId}/registrations": {
+      "post": {
+        "description": "Individual or team. Fails if the event is not open for registration.",
+        "operationId": "RegisterForEventHttpController_register_v1",
+        "parameters": [
+          {
+            "name": "eventId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterForEventRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registration created; returns its id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed or invalid argument.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state (invalid transition, duplicate, locked).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Register for an event",
+        "tags": [
+          "participation"
+        ]
+      },
+      "get": {
+        "operationId": "ListRegistrationsHttpController_list_v1",
+        "parameters": [
+          {
+            "name": "eventId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RegistrationListItemDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "List registrations for an event",
+        "tags": [
+          "participation"
+        ]
+      }
+    },
+    "/v1/registrations/{id}/cancel": {
+      "post": {
+        "description": "Only the registrant may cancel.",
+        "operationId": "CancelRegistrationHttpController_cancel_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state (invalid transition, duplicate, locked).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Cancel a registration",
+        "tags": [
+          "participation"
+        ]
+      }
+    },
+    "/v1/registrations/{id}/check-in": {
+      "post": {
+        "description": "Idempotency: double check-in returns 409.",
+        "operationId": "CheckInHttpController_checkIn_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state (invalid transition, duplicate, locked).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Check in a registration",
+        "tags": [
+          "participation"
+        ]
+      }
+    },
+    "/v1/events/{eventId}/budget": {
+      "post": {
+        "description": "Authorized via cross-context organizer check; only organizers may create it.",
+        "operationId": "CreateBudgetHttpController_create_v1",
+        "parameters": [
+          {
+            "name": "eventId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBudgetRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Budget created; returns the budget id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state (invalid transition, duplicate, locked).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create the budget for an event",
+        "tags": [
+          "budget"
+        ]
+      },
+      "get": {
+        "description": "Planned vs actual totals and variance.",
+        "operationId": "GetBudgetSummaryHttpController_summary_v1",
+        "parameters": [
+          {
+            "name": "eventId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BudgetSummaryDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Budget summary",
+        "tags": [
+          "budget"
+        ]
+      }
+    },
+    "/v1/budgets/{budgetId}/items": {
+      "post": {
+        "operationId": "AddBudgetItemHttpController_addItem_v1",
+        "parameters": [
+          {
+            "name": "budgetId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddBudgetItemRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Item added; returns the item id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state (invalid transition, duplicate, locked).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Add a planned line item to a budget",
+        "tags": [
+          "budget"
+        ]
+      }
+    },
+    "/v1/budgets/{budgetId}/items/{itemId}/actual": {
+      "patch": {
+        "operationId": "RecordActualHttpController_record_v1",
+        "parameters": [
+          {
+            "name": "budgetId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecordActualRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state (invalid transition, duplicate, locked).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Record the actual spend for a budget item",
+        "tags": [
+          "budget"
+        ]
+      }
+    },
+    "/v1/budgets/{budgetId}/finalize": {
+      "post": {
+        "description": "Locks it; further edits return 409.",
+        "operationId": "FinalizeBudgetHttpController_finalize_v1",
+        "parameters": [
+          {
+            "name": "budgetId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state (invalid transition, duplicate, locked).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Finalize a budget",
+        "tags": [
+          "budget"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Event System API",
+    "description": "Internal company event-management backend (NestJS · DDD/Hexagonal · CQRS). Auth: send a Google ID token as `Authorization: Bearer <token>`, or in dev the `x-user-id: <uuid>` header.",
+    "version": "1",
+    "contact": {}
+  },
+  "tags": [
+    {
+      "name": "events",
+      "description": "Event lifecycle: create, publish, open registration, reschedule, cancel"
+    },
+    {
+      "name": "participation",
+      "description": "Registrations: register, cancel, check-in, list"
+    },
+    {
+      "name": "budget",
+      "description": "Event budgeting: plan, record actuals, finalize, summary"
+    }
+  ],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http",
+        "description": "Google ID token."
+      },
+      "x-user-id": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-user-id"
+      }
+    },
+    "schemas": {
+      "EventType": {
+        "type": "string",
+        "enum": [
+          "INTERNAL_MEETING",
+          "TRAINING",
+          "TEAM_BUILDING",
+          "TRAVEL"
+        ],
+        "description": "Kind of event."
+      },
+      "RegistrationMode": {
+        "type": "string",
+        "enum": [
+          "INDIVIDUAL",
+          "TEAM",
+          "BOTH"
+        ],
+        "description": "How people register."
+      },
+      "CreateEventRequestDto": {
+        "type": "object",
+        "properties": {
+          "titleVi": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Vietnamese title (required).",
+            "example": "Hội thảo nội bộ Q3"
+          },
+          "titleJa": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Japanese title.",
+            "example": "社内セミナー Q3"
+          },
+          "descriptionVi": {
+            "type": "string",
+            "maxLength": 2000,
+            "description": "Vietnamese description."
+          },
+          "descriptionJa": {
+            "type": "string",
+            "maxLength": 2000,
+            "description": "Japanese description."
+          },
+          "type": {
+            "description": "Kind of event.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EventType"
+              }
+            ]
+          },
+          "startAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start (ISO 8601).",
+            "example": "2026-08-01T09:00:00.000Z"
+          },
+          "endAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "End (ISO 8601), must be after start.",
+            "example": "2026-08-01T12:00:00.000Z"
+          },
+          "locationKind": {
+            "type": "string",
+            "enum": [
+              "ONLINE",
+              "OFFLINE"
+            ],
+            "description": "Location kind."
+          },
+          "locationAddress": {
+            "type": "string",
+            "maxLength": 300,
+            "description": "Physical address (OFFLINE)."
+          },
+          "locationUrl": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "Meeting URL (ONLINE)."
+          },
+          "capacity": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Max participants; omit for unlimited."
+          },
+          "registrationMode": {
+            "description": "How people register.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RegistrationMode"
+              }
+            ]
+          },
+          "registrationDeadline": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Registration deadline (ISO 8601)."
+          }
+        },
+        "required": [
+          "titleVi",
+          "type",
+          "startAt",
+          "endAt",
+          "registrationMode"
+        ]
+      },
+      "IdResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Identifier of the affected aggregate.",
+            "example": "3f1a7c2e-4b6d-4e8a-9c1f-2a5b7d9e0c34"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "ApiErrorDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Human-readable error message.",
+            "example": "Event not found"
+          },
+          "code": {
+            "type": "string",
+            "description": "Stable machine-readable error code (e.g. `EVENT.NOT_FOUND`, `HTTP.400`).",
+            "example": "EVENT.NOT_FOUND"
+          },
+          "correlationId": {
+            "type": "string",
+            "description": "Correlation id for tracing, when available."
+          }
+        },
+        "required": [
+          "message",
+          "code"
+        ]
+      },
+      "RescheduleEventRequestDto": {
+        "type": "object",
+        "properties": {
+          "startAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "New start (ISO 8601).",
+            "example": "2026-08-02T09:00:00.000Z"
+          },
+          "endAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "New end (ISO 8601), after start.",
+            "example": "2026-08-02T12:00:00.000Z"
+          }
+        },
+        "required": [
+          "startAt",
+          "endAt"
+        ]
+      },
+      "CancelEventRequestDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "Reason shown to registrants."
+          }
+        }
+      },
+      "EventListItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string",
+            "description": "Localized title for the requested `lang`."
+          },
+          "type": {
+            "type": "string",
+            "description": "Event type (see EventType)."
+          },
+          "status": {
+            "type": "string",
+            "description": "Lifecycle status (DRAFT, PUBLISHED, REGISTRATION_OPEN, …)."
+          },
+          "startAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "type",
+          "status",
+          "startAt",
+          "endAt"
+        ]
+      },
+      "ParticipationMode": {
+        "type": "string",
+        "enum": [
+          "INDIVIDUAL",
+          "TEAM"
+        ],
+        "description": "Individual or team registration."
+      },
+      "RegisterForEventRequestDto": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "description": "Individual or team registration.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ParticipationMode"
+              }
+            ]
+          },
+          "teamName": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Team name (required for TEAM mode)."
+          },
+          "memberIds": {
+            "description": "Team member user ids (TEAM mode).",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "mode"
+        ]
+      },
+      "RegistrationListItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Registrant / team captain user id."
+          },
+          "mode": {
+            "type": "string",
+            "description": "INDIVIDUAL or TEAM."
+          },
+          "teamName": {
+            "type": "object",
+            "nullable": true,
+            "description": "Team name (null for individuals)."
+          },
+          "status": {
+            "type": "string",
+            "description": "REGISTERED or CANCELLED."
+          },
+          "checkedIn": {
+            "type": "boolean",
+            "description": "Whether the registrant has checked in."
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "mode",
+          "teamName",
+          "status",
+          "checkedIn"
+        ]
+      },
+      "CreateBudgetRequestDto": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 10,
+            "description": "ISO currency code (default VND).",
+            "example": "VND"
+          }
+        }
+      },
+      "AddBudgetItemRequestDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Line-item name.",
+            "example": "Venue rental"
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 50,
+            "description": "Category grouping.",
+            "example": "Logistics"
+          },
+          "plannedAmount": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Planned amount in the budget currency."
+          }
+        },
+        "required": [
+          "name",
+          "category",
+          "plannedAmount"
+        ]
+      },
+      "RecordActualRequestDto": {
+        "type": "object",
+        "properties": {
+          "actualAmount": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Actual amount spent for this line item."
+          },
+          "invoiceUrl": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "URL of the supporting invoice/receipt."
+          }
+        },
+        "required": [
+          "actualAmount"
+        ]
+      },
+      "BudgetItemDto": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "plannedAmount": {
+            "type": "number"
+          },
+          "actualAmount": {
+            "type": "number"
+          },
+          "invoiceUrl": {
+            "type": "object",
+            "nullable": true,
+            "description": "Invoice/receipt URL, if recorded."
+          }
+        },
+        "required": [
+          "itemId",
+          "name",
+          "category",
+          "plannedAmount",
+          "actualAmount",
+          "invoiceUrl"
+        ]
+      },
+      "BudgetSummaryDto": {
+        "type": "object",
+        "properties": {
+          "budgetId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "currency": {
+            "type": "string",
+            "description": "Budget currency code."
+          },
+          "status": {
+            "type": "string",
+            "description": "DRAFT or FINALIZED."
+          },
+          "totalPlanned": {
+            "type": "number",
+            "description": "Sum of planned amounts."
+          },
+          "totalActual": {
+            "type": "number",
+            "description": "Sum of actual amounts."
+          },
+          "variance": {
+            "type": "number",
+            "description": "Planned minus actual (positive = under budget)."
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BudgetItemDto"
+            }
+          }
+        },
+        "required": [
+          "budgetId",
+          "eventId",
+          "currency",
+          "status",
+          "totalPlanned",
+          "totalActual",
+          "variance",
+          "items"
+        ]
+      }
+    }
+  },
+  "security": [
+    {
+      "bearer": []
+    },
+    {
+      "x-user-id": []
+    }
+  ]
+}
