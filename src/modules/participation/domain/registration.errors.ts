@@ -14,6 +14,20 @@ export class AlreadyRegisteredError extends ExceptionBase {
   }
 }
 
+export class RegistrationEventNotFoundError extends ExceptionBase {
+  readonly code = 'REGISTRATION.EVENT_NOT_FOUND';
+  constructor() {
+    super('Event not found');
+  }
+}
+
+export class EventNotOpenForRegistrationError extends ExceptionBase {
+  readonly code = 'REGISTRATION.EVENT_NOT_OPEN';
+  constructor() {
+    super('Event is not open for registration');
+  }
+}
+
 export class NotRegistrantError extends ExceptionBase {
   readonly code = 'REGISTRATION.NOT_REGISTRANT';
   constructor() {
