@@ -31,6 +31,13 @@
 | is-event-open-for-registration | qry | (bus) | ✗ | `queries/is-event-open-for-registration` |
 | is-event-organizer | qry | (bus) | ✗ | `queries/is-event-organizer` |
 
+### `notification`
+
+| Use case | Kind | Endpoint | Spec | Folder |
+|---|---|---|---|---|
+| update-notification-preference | cmd | PUT /notification-preferences | ✗ | `commands/update-notification-preference` |
+| get-notification-preferences | qry | GET /notification-preferences | ✗ | `queries/get-notification-preferences` |
+
 ### `participation`
 
 | Use case | Kind | Endpoint | Spec | Folder |
@@ -54,7 +61,7 @@
 | EventRescheduledDomainEvent | `event/domain/event.entity.ts` | _none — no handler_ | `event/domain/events/event-rescheduled.domain-event.ts` |
 | ParticipantCheckedInDomainEvent | `participation/domain/registration.entity.ts` | _none — no handler_ | `participation/domain/events/participant-checked-in.domain-event.ts` |
 | ParticipantRegisteredDomainEvent | `participation/domain/registration.entity.ts` | `notification/application/event-handlers/event-notifications.handler.ts` | `participation/domain/events/participant-registered.domain-event.ts` |
-| RegistrationCancelledDomainEvent | `participation/domain/registration.entity.ts` | _none — no handler_ | `participation/domain/events/registration-cancelled.domain-event.ts` |
+| RegistrationCancelledDomainEvent | `participation/domain/registration.entity.ts` | `notification/application/event-handlers/event-notifications.handler.ts` | `participation/domain/events/registration-cancelled.domain-event.ts` |
 | RegistrationClosedDomainEvent | `event/domain/event.entity.ts` | _none — no handler_ | `event/domain/events/registration-closed.domain-event.ts` |
 | RegistrationOpenedDomainEvent | `event/domain/event.entity.ts` | _none — no handler_ | `event/domain/events/registration-opened.domain-event.ts` |
 | RegistrationReopenedDomainEvent | `event/domain/event.entity.ts` | _none — no handler_ | `event/domain/events/registration-reopened.domain-event.ts` |
@@ -67,4 +74,4 @@
 | IsEventOrganizerQuery | `event/queries/is-event-organizer/is-event-organizer.query-handler.ts` | `budget/commands/create-budget/create-budget.service.ts` | `libs/contracts/event/is-event-organizer.query.ts` |
 
 ---
-_Totals: 17 slices · 14 domain events · 2 contracts · 4 contexts._
+_Totals: 19 slices · 14 domain events · 2 contracts · 4 contexts._

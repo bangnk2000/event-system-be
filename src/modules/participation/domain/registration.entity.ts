@@ -66,7 +66,11 @@ export class RegistrationEntity extends AggregateRoot<RegistrationProps> {
     this.props.status = RegistrationStatus.CANCELLED;
     this.setUpdatedAt(now);
     this.addEvent(
-      new RegistrationCancelledDomainEvent({ aggregateId: this.id, eventId: this.props.eventId }),
+      new RegistrationCancelledDomainEvent({
+        aggregateId: this.id,
+        eventId: this.props.eventId,
+        userId: this.props.userId,
+      }),
     );
     return Ok(undefined);
   }

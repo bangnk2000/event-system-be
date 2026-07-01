@@ -34,6 +34,7 @@ export function buildOpenApiDocument(app: INestApplication): OpenAPIObject {
     .addTag('events', 'Event lifecycle: create, publish, open registration, reschedule, cancel')
     .addTag('participation', 'Registrations: register, cancel, check-in, list')
     .addTag('budget', 'Event budgeting: plan, record actuals, finalize, summary')
+    .addTag('notifications', 'Per-user notification preferences (opt in/out by type)')
     .build();
 
   return SwaggerModule.createDocument(app, config);
