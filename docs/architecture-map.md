@@ -16,6 +16,7 @@
 | create-budget | cmd | POST /events/:eventId/budget | ✗ | `commands/create-budget` |
 | finalize-budget | cmd | POST /budgets/:budgetId/finalize | ✗ | `commands/finalize-budget` |
 | record-actual | cmd | PATCH /budgets/:budgetId/items/:itemId/actual | ✗ | `commands/record-actual` |
+| event-budget-summary | qry | (bus) | ✗ | `queries/event-budget-summary` |
 | get-budget-summary | qry | GET /events/:eventId/budget | ✗ | `queries/get-budget-summary` |
 
 ### `event`
@@ -28,6 +29,7 @@
 | publish-event | cmd | POST /events/:id/publish | ✗ | `commands/publish-event` |
 | reschedule-event | cmd | PATCH /events/:id/schedule | ✗ | `commands/reschedule-event` |
 | get-event-list | qry | GET /events | ✗ | `queries/get-event-list` |
+| get-event-report | qry | GET /events/:eventId/report | ✗ | `queries/get-event-report` |
 | is-event-open-for-registration | qry | (bus) | ✗ | `queries/is-event-open-for-registration` |
 | is-event-organizer | qry | (bus) | ✗ | `queries/is-event-organizer` |
 
@@ -45,6 +47,7 @@
 | cancel-registration | cmd | POST /registrations/:id/cancel | ✗ | `commands/cancel-registration` |
 | check-in | cmd | POST /registrations/:id/check-in | ✗ | `commands/check-in` |
 | register-for-event | cmd | POST /events/:eventId/registrations | ✗ | `commands/register-for-event` |
+| event-participation-stats | qry | (bus) | ✗ | `queries/event-participation-stats` |
 | list-registrations | qry | GET /events/:eventId/registrations | ✗ | `queries/list-registrations` |
 
 ## Domain events — name → raised in → consumed by (via outbox `@OnEvent`)
@@ -70,8 +73,10 @@
 
 | Query | Handled by | Sent by | Def |
 |---|---|---|---|
+| GetEventBudgetSummaryQuery | `budget/queries/event-budget-summary/event-budget-summary.query-handler.ts` | `event/queries/get-event-report/get-event-report.query-handler.ts` | `libs/contracts/budget/get-event-budget-summary.query.ts` |
 | IsEventOpenForRegistrationQuery | `event/queries/is-event-open-for-registration/is-event-open-for-registration.query-handler.ts` | `participation/commands/register-for-event/register-for-event.service.ts` | `libs/contracts/event/is-event-open-for-registration.query.ts` |
 | IsEventOrganizerQuery | `event/queries/is-event-organizer/is-event-organizer.query-handler.ts` | `budget/commands/create-budget/create-budget.service.ts` | `libs/contracts/event/is-event-organizer.query.ts` |
+| GetEventParticipationStatsQuery | `participation/queries/event-participation-stats/event-participation-stats.query-handler.ts` | `event/queries/get-event-report/get-event-report.query-handler.ts` | `libs/contracts/participation/get-event-participation-stats.query.ts` |
 
 ---
-_Totals: 19 slices · 14 domain events · 2 contracts · 4 contexts._
+_Totals: 22 slices · 14 domain events · 4 contracts · 4 contexts._

@@ -11,6 +11,7 @@ import { FinalizeBudgetService } from './commands/finalize-budget/finalize-budge
 import { FinalizeBudgetHttpController } from './commands/finalize-budget/finalize-budget.http.controller';
 import { GetBudgetSummaryQueryHandler } from './queries/get-budget-summary/get-budget-summary.query-handler';
 import { GetBudgetSummaryHttpController } from './queries/get-budget-summary/get-budget-summary.http.controller';
+import { GetEventBudgetSummaryQueryHandler } from './queries/event-budget-summary/event-budget-summary.query-handler';
 import { BudgetRepository } from './database/budget.repository';
 import { BudgetMapper } from './database/budget.mapper';
 
@@ -30,6 +31,7 @@ import { BudgetMapper } from './database/budget.mapper';
     RecordActualService,
     FinalizeBudgetService,
     GetBudgetSummaryQueryHandler,
+    GetEventBudgetSummaryQueryHandler,
     { provide: BUDGET_REPOSITORY, useClass: BudgetRepository },
   ],
 })
