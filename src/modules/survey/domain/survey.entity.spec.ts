@@ -15,6 +15,16 @@ const single = (id: string): SurveyQuestion =>
     { key: 'b', label: text('B') },
   ]);
 
+const multi = (id: string): SurveyQuestion =>
+  new SurveyQuestion(id, 2, QuestionType.MULTIPLE_CHOICE, text('Chọn nhiều'), true, [
+    { key: 'a', label: text('A') },
+    { key: 'b', label: text('B') },
+    { key: 'c', label: text('C') },
+  ]);
+
+const freeText = (id: string, required = false): SurveyQuestion =>
+  new SurveyQuestion(id, 3, QuestionType.TEXT, text('Góp ý'), required, []);
+
 const draft = (questions: SurveyQuestion[]): SurveyEntity =>
   SurveyEntity.create(
     {
@@ -90,6 +100,33 @@ describe('SurveyEntity', () => {
         ]).isErr(),
       ).toBe(true);
     });
+
+    it('accepts multiple-choice, free text, and skips a blank optional text', () => {
+      const survey = draft([multi('q3'), freeText('q4')]);
+      const ok = survey.buildAnswers([
+        { questionId: 'q3', choiceKeys: ['a', 'c'] },
+        { questionId: 'q4', textValue: 'Rất tốt' },
+      ]);
+      expect(ok.isOk()).toBe(true);
+      expect(ok.unwrap()).toHaveLength(2);
+
+      // optional text left blank -> valid, dropped from the stored answers
+      const blank = survey.buildAnswers([{ questionId: 'q3', choiceKeys: ['b'] }]);
+      expect(blank.isOk()).toBe(true);
+      expect(blank.unwrap()).toHaveLength(1);
+    });
+
+    it('rejects an empty multiple-choice answer to a required question', () => {
+      const survey = draft([multi('q3')]);
+      expect(survey.buildAnswers([{ questionId: 'q3', choiceKeys: [] }]).isErr()).toBe(true);
+    });
+  });
+
+  it('exposes bilingual prompt text with the Japanese variant', () => {
+    const bilingual = MultilingualText.create('Xin chào', 'こんにちは');
+    expect(bilingual.vi).toBe('Xin chào');
+    expect(bilingual.ja).toBe('こんにちは');
+    expect(MultilingualText.create('Chỉ tiếng Việt').ja).toBeUndefined();
   });
 
   it('rejects a choice question configured with fewer than 2 options', () => {
