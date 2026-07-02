@@ -36,6 +36,7 @@ export function buildOpenApiDocument(app: INestApplication): OpenAPIObject {
     .addTag('budget', 'Event budgeting: plan, record actuals, finalize, summary')
     .addTag('notifications', 'Per-user notification preferences (opt in/out by type)')
     .addTag('survey', 'Post-event surveys: create, open/close, submit (anonymous), aggregated results')
+    .addTag('competition', 'Sports tournaments: create, seed (elim/round-robin/group→knockout), record results, standings')
     .build();
 
   return SwaggerModule.createDocument(app, config);

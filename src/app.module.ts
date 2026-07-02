@@ -12,6 +12,7 @@ import { ParticipationModule } from '@modules/participation/participation.module
 import { NotificationModule } from '@modules/notification/notification.module';
 import { BudgetModule } from '@modules/budget/budget.module';
 import { SurveyModule } from '@modules/survey/survey.module';
+import { CompetitionModule } from '@modules/competition/competition.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { SurveyModule } from '@modules/survey/survey.module';
     NotificationModule,
     BudgetModule,
     SurveyModule,
+    CompetitionModule,
   ],
 })
 export class AppModule {}
