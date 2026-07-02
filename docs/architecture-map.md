@@ -19,6 +19,21 @@
 | event-budget-summary | qry | (bus) | ✗ | `queries/event-budget-summary` |
 | get-budget-summary | qry | GET /events/:eventId/budget | ✗ | `queries/get-budget-summary` |
 
+### `competition`
+
+| Use case | Kind | Endpoint | Spec | Folder |
+|---|---|---|---|---|
+| add-competitor | cmd | POST /tournaments/:tournamentId/competitors | ✗ | `commands/add-competitor` |
+| advance-to-knockout | cmd | POST /tournaments/:tournamentId/advance-knockout | ✗ | `commands/advance-to-knockout` |
+| complete-tournament | cmd | POST /tournaments/:tournamentId/complete | ✗ | `commands/complete-tournament` |
+| create-tournament | cmd | POST /events/:eventId/tournaments | ✗ | `commands/create-tournament` |
+| record-match-result | cmd | POST /tournaments/:tournamentId/matches/:matchId/result | ✗ | `commands/record-match-result` |
+| remove-competitor | cmd | DELETE /tournaments/:tournamentId/competitors/:competitorId | ✗ | `commands/remove-competitor` |
+| seed-tournament | cmd | POST /tournaments/:tournamentId/seed | ✗ | `commands/seed-tournament` |
+| get-tournament-bracket | qry | GET /tournaments/:tournamentId | ✗ | `queries/get-tournament-bracket` |
+| get-tournament-standings | qry | GET /tournaments/:tournamentId/standings | ✗ | `queries/get-tournament-standings` |
+| list-event-tournaments | qry | GET /events/:eventId/tournaments | ✗ | `queries/list-event-tournaments` |
+
 ### `event`
 
 | Use case | Kind | Endpoint | Spec | Folder |
@@ -48,6 +63,7 @@
 | check-in | cmd | POST /registrations/:id/check-in | ✗ | `commands/check-in` |
 | register-for-event | cmd | POST /events/:eventId/registrations | ✗ | `commands/register-for-event` |
 | event-participation-stats | qry | (bus) | ✗ | `queries/event-participation-stats` |
+| get-event-registrations | qry | (bus) | ✗ | `queries/get-event-registrations` |
 | is-event-participant | qry | (bus) | ✗ | `queries/is-event-participant` |
 | list-registrations | qry | GET /events/:eventId/registrations | ✗ | `queries/list-registrations` |
 
@@ -75,6 +91,8 @@
 | EventDraftedDomainEvent | `event/domain/event.entity.ts` | _none — no handler_ | `event/domain/events/event-drafted.domain-event.ts` |
 | EventPublishedDomainEvent | `event/domain/event.entity.ts` | `notification/application/event-handlers/event-notifications.handler.ts` | `event/domain/events/event-published.domain-event.ts` |
 | EventRescheduledDomainEvent | `event/domain/event.entity.ts` | _none — no handler_ | `event/domain/events/event-rescheduled.domain-event.ts` |
+| KnockoutStageGeneratedDomainEvent | `competition/domain/tournament.entity.ts` | _none — no handler_ | `competition/domain/events/knockout-stage-generated.domain-event.ts` |
+| MatchResultRecordedDomainEvent | `competition/domain/tournament.entity.ts` | _none — no handler_ | `competition/domain/events/match-result-recorded.domain-event.ts` |
 | ParticipantCheckedInDomainEvent | `participation/domain/registration.entity.ts` | _none — no handler_ | `participation/domain/events/participant-checked-in.domain-event.ts` |
 | ParticipantRegisteredDomainEvent | `participation/domain/registration.entity.ts` | `notification/application/event-handlers/event-notifications.handler.ts` | `participation/domain/events/participant-registered.domain-event.ts` |
 | RegistrationCancelledDomainEvent | `participation/domain/registration.entity.ts` | `notification/application/event-handlers/event-notifications.handler.ts` | `participation/domain/events/registration-cancelled.domain-event.ts` |
@@ -85,6 +103,9 @@
 | SurveyCreatedDomainEvent | `survey/domain/survey.entity.ts` | _none — no handler_ | `survey/domain/events/survey-created.domain-event.ts` |
 | SurveyOpenedDomainEvent | `survey/domain/survey.entity.ts` | _none — no handler_ | `survey/domain/events/survey-opened.domain-event.ts` |
 | SurveyResponseSubmittedDomainEvent | `survey/domain/survey-response.entity.ts` | _none — no handler_ | `survey/domain/events/survey-response-submitted.domain-event.ts` |
+| TournamentCompletedDomainEvent | `competition/domain/tournament.entity.ts` | _none — no handler_ | `competition/domain/events/tournament-completed.domain-event.ts` |
+| TournamentCreatedDomainEvent | `competition/domain/tournament.entity.ts` | _none — no handler_ | `competition/domain/events/tournament-created.domain-event.ts` |
+| TournamentSeededDomainEvent | `competition/domain/tournament.entity.ts` | _none — no handler_ | `competition/domain/events/tournament-seeded.domain-event.ts` |
 
 ## Cross-context contracts — `libs/contracts` (QueryBus, no module import)
 
@@ -92,9 +113,10 @@
 |---|---|---|---|
 | GetEventBudgetSummaryQuery | `budget/queries/event-budget-summary/event-budget-summary.query-handler.ts` | `event/queries/get-event-report/get-event-report.query-handler.ts` | `libs/contracts/budget/get-event-budget-summary.query.ts` |
 | IsEventOpenForRegistrationQuery | `event/queries/is-event-open-for-registration/is-event-open-for-registration.query-handler.ts` | `participation/commands/register-for-event/register-for-event.service.ts` | `libs/contracts/event/is-event-open-for-registration.query.ts` |
-| IsEventOrganizerQuery | `event/queries/is-event-organizer/is-event-organizer.query-handler.ts` | `budget/commands/create-budget/create-budget.service.ts`<br>`survey/commands/close-survey/close-survey.service.ts`<br>`survey/commands/create-survey/create-survey.service.ts`<br>`survey/commands/open-survey/open-survey.service.ts`<br>`survey/queries/get-survey-results/get-survey-results.query-handler.ts`<br>`survey/queries/list-event-surveys/list-event-surveys.query-handler.ts` | `libs/contracts/event/is-event-organizer.query.ts` |
+| IsEventOrganizerQuery | `event/queries/is-event-organizer/is-event-organizer.query-handler.ts` | `budget/commands/create-budget/create-budget.service.ts`<br>`competition/commands/add-competitor/add-competitor.service.ts`<br>`competition/commands/advance-to-knockout/advance-to-knockout.service.ts`<br>`competition/commands/complete-tournament/complete-tournament.service.ts`<br>`competition/commands/create-tournament/create-tournament.service.ts`<br>`competition/commands/record-match-result/record-match-result.service.ts`<br>`competition/commands/remove-competitor/remove-competitor.service.ts`<br>`competition/commands/seed-tournament/seed-tournament.service.ts`<br>`survey/commands/close-survey/close-survey.service.ts`<br>`survey/commands/create-survey/create-survey.service.ts`<br>`survey/commands/open-survey/open-survey.service.ts`<br>`survey/queries/get-survey-results/get-survey-results.query-handler.ts`<br>`survey/queries/list-event-surveys/list-event-surveys.query-handler.ts` | `libs/contracts/event/is-event-organizer.query.ts` |
 | GetEventParticipationStatsQuery | `participation/queries/event-participation-stats/event-participation-stats.query-handler.ts` | `event/queries/get-event-report/get-event-report.query-handler.ts`<br>`survey/queries/get-survey-results/get-survey-results.query-handler.ts` | `libs/contracts/participation/get-event-participation-stats.query.ts` |
+| GetEventRegistrationsQuery | `participation/queries/get-event-registrations/get-event-registrations.query-handler.ts` | `competition/commands/add-competitor/add-competitor.service.ts` | `libs/contracts/participation/get-event-registrations.query.ts` |
 | IsEventParticipantQuery | `participation/queries/is-event-participant/is-event-participant.query-handler.ts` | `survey/commands/submit-response/submit-response.service.ts` | `libs/contracts/participation/is-event-participant.query.ts` |
 
 ---
-_Totals: 30 slices · 18 domain events · 5 contracts · 5 contexts._
+_Totals: 41 slices · 23 domain events · 6 contracts · 6 contexts._

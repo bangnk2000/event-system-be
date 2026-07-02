@@ -1950,6 +1950,814 @@
           "survey"
         ]
       }
+    },
+    "/v1/events/{eventId}/tournaments": {
+      "post": {
+        "description": "Organizers only. Choose the format; add competitors and seed afterwards.",
+        "operationId": "CreateTournamentHttpController_create_v1",
+        "parameters": [
+          {
+            "name": "eventId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTournamentRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Tournament created; returns its id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a tournament for an event",
+        "tags": [
+          "competition"
+        ]
+      },
+      "get": {
+        "operationId": "ListEventTournamentsHttpController_list_v1",
+        "parameters": [
+          {
+            "name": "eventId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TournamentListItemDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List the tournaments of an event",
+        "tags": [
+          "competition"
+        ]
+      }
+    },
+    "/v1/tournaments/{tournamentId}/competitors": {
+      "post": {
+        "description": "Organizers only, while the tournament is DRAFT.",
+        "operationId": "AddCompetitorHttpController_addCompetitor_v1",
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCompetitorRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Competitor added; returns its id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed or invalid argument.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state (invalid transition, duplicate, locked).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Add a competitor (promote a registration)",
+        "tags": [
+          "competition"
+        ]
+      }
+    },
+    "/v1/tournaments/{tournamentId}/competitors/{competitorId}": {
+      "delete": {
+        "description": "Organizers only, while the tournament is DRAFT.",
+        "operationId": "RemoveCompetitorHttpController_removeCompetitor_v1",
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "competitorId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Competitor removed; returns the tournament id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state (invalid transition, duplicate, locked).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Remove a competitor",
+        "tags": [
+          "competition"
+        ]
+      }
+    },
+    "/v1/tournaments/{tournamentId}/seed": {
+      "post": {
+        "description": "Organizers only, from DRAFT. Locks the competitor list and builds the bracket/schedule.",
+        "operationId": "SeedTournamentHttpController_seed_v1",
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Seeded; returns the tournament id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed or invalid argument.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state (invalid transition, duplicate, locked).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Seed a tournament (generate the matches)",
+        "tags": [
+          "competition"
+        ]
+      }
+    },
+    "/v1/tournaments/{tournamentId}/matches/{matchId}/result": {
+      "post": {
+        "description": "Organizers only. Sets the score and auto-advances the winner in elimination rounds.",
+        "operationId": "RecordMatchResultHttpController_record_v1",
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "matchId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecordMatchResultRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Recorded; returns the tournament id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed or invalid argument.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state (invalid transition, duplicate, locked).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Record a match result",
+        "tags": [
+          "competition"
+        ]
+      }
+    },
+    "/v1/tournaments/{tournamentId}/advance-knockout": {
+      "post": {
+        "description": "Organizers only, once every group match has a result. Seeds top-K per group into a bracket.",
+        "operationId": "AdvanceToKnockoutHttpController_advance_v1",
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Knockout generated; returns the tournament id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state (invalid transition, duplicate, locked).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Advance a group→knockout tournament to its knockout stage",
+        "tags": [
+          "competition"
+        ]
+      }
+    },
+    "/v1/tournaments/{tournamentId}/complete": {
+      "post": {
+        "description": "Organizers only, once every match has a result. Determines the champion.",
+        "operationId": "CompleteTournamentHttpController_complete_v1",
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Completed; returns the tournament id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state (invalid transition, duplicate, locked).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Complete a tournament",
+        "tags": [
+          "competition"
+        ]
+      }
+    },
+    "/v1/tournaments/{tournamentId}": {
+      "get": {
+        "description": "Competitors + matches by round/group.",
+        "operationId": "GetTournamentBracketHttpController_bracket_v1",
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TournamentBracketDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Tournament bracket",
+        "tags": [
+          "competition"
+        ]
+      }
+    },
+    "/v1/tournaments/{tournamentId}/standings": {
+      "get": {
+        "description": "Computed from recorded scores; one table per group for group→knockout.",
+        "operationId": "GetTournamentStandingsHttpController_standings_v1",
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TournamentStandingsDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Tournament standings",
+        "tags": [
+          "competition"
+        ]
+      }
     }
   },
   "info": {
@@ -1978,6 +2786,10 @@
     {
       "name": "survey",
       "description": "Post-event surveys: create, open/close, submit (anonymous), aggregated results"
+    },
+    {
+      "name": "competition",
+      "description": "Sports tournaments: create, seed (elim/round-robin/group→knockout), record results, standings"
     }
   ],
   "servers": [],
@@ -3080,6 +3892,357 @@
           "eligible",
           "responseRate",
           "questions"
+        ]
+      },
+      "CreateTournamentRequestDto": {
+        "type": "object",
+        "properties": {
+          "nameVi": {
+            "type": "string",
+            "example": "Giải cầu lông nội bộ"
+          },
+          "nameJa": {
+            "type": "string",
+            "example": "社内バドミントン大会"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "SINGLE_ELIM",
+              "ROUND_ROBIN",
+              "GROUP_KNOCKOUT"
+            ]
+          },
+          "numGroups": {
+            "type": "number",
+            "minimum": 2,
+            "maximum": 16,
+            "description": "GROUP_KNOCKOUT only: number of groups."
+          },
+          "advancePerGroup": {
+            "type": "number",
+            "minimum": 1,
+            "description": "GROUP_KNOCKOUT only: how many top competitors per group advance to the knockout."
+          }
+        },
+        "required": [
+          "nameVi",
+          "format"
+        ]
+      },
+      "AddCompetitorRequestDto": {
+        "type": "object",
+        "properties": {
+          "registrationId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "A REGISTERED registration of this event to enter."
+          }
+        },
+        "required": [
+          "registrationId"
+        ]
+      },
+      "RecordMatchResultRequestDto": {
+        "type": "object",
+        "properties": {
+          "scoreA": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Score for competitor A."
+          },
+          "scoreB": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Score for competitor B."
+          },
+          "detail": {
+            "type": "string",
+            "description": "Freeform breakdown for display, e.g. \"21-18, 19-21, 21-15\".",
+            "example": "21-18, 19-21, 21-15"
+          }
+        },
+        "required": [
+          "scoreA",
+          "scoreB"
+        ]
+      },
+      "BracketCompetitorDto": {
+        "type": "object",
+        "properties": {
+          "competitorId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "seed": {
+            "type": "number"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "groupLabel": {
+            "type": "object",
+            "nullable": true
+          }
+        },
+        "required": [
+          "competitorId",
+          "seed",
+          "displayName",
+          "groupLabel"
+        ]
+      },
+      "BracketMatchDto": {
+        "type": "object",
+        "properties": {
+          "matchId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "round": {
+            "type": "number"
+          },
+          "groupLabel": {
+            "type": "object",
+            "nullable": true
+          },
+          "stage": {
+            "type": "object",
+            "nullable": true,
+            "description": "GROUP or KNOCKOUT for group→knockout; null otherwise."
+          },
+          "competitorA": {
+            "type": "object",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "competitorB": {
+            "type": "object",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "scoreA": {
+            "type": "number",
+            "nullable": true
+          },
+          "scoreB": {
+            "type": "number",
+            "nullable": true
+          },
+          "winner": {
+            "type": "object",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "description": "PENDING | SCHEDULED | PLAYED | BYE"
+          },
+          "nextMatchId": {
+            "type": "object",
+            "nullable": true,
+            "format": "uuid",
+            "description": "Elim: the match the winner advances into."
+          },
+          "detail": {
+            "type": "object",
+            "nullable": true
+          }
+        },
+        "required": [
+          "matchId",
+          "round",
+          "groupLabel",
+          "stage",
+          "competitorA",
+          "competitorB",
+          "scoreA",
+          "scoreB",
+          "winner",
+          "status",
+          "nextMatchId",
+          "detail"
+        ]
+      },
+      "TournamentBracketDto": {
+        "type": "object",
+        "properties": {
+          "tournamentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "format": {
+            "type": "string",
+            "description": "SINGLE_ELIM | ROUND_ROBIN | GROUP_KNOCKOUT"
+          },
+          "status": {
+            "type": "string",
+            "description": "DRAFT | SEEDED | IN_PROGRESS | COMPLETED | CANCELLED"
+          },
+          "stage": {
+            "type": "object",
+            "nullable": true
+          },
+          "competitors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BracketCompetitorDto"
+            }
+          },
+          "matches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BracketMatchDto"
+            }
+          }
+        },
+        "required": [
+          "tournamentId",
+          "eventId",
+          "name",
+          "format",
+          "status",
+          "stage",
+          "competitors",
+          "matches"
+        ]
+      },
+      "StandingRowDto": {
+        "type": "object",
+        "properties": {
+          "competitorId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "played": {
+            "type": "number"
+          },
+          "won": {
+            "type": "number"
+          },
+          "drawn": {
+            "type": "number"
+          },
+          "lost": {
+            "type": "number"
+          },
+          "scoreFor": {
+            "type": "number"
+          },
+          "scoreAgainst": {
+            "type": "number"
+          },
+          "diff": {
+            "type": "number",
+            "description": "scoreFor − scoreAgainst."
+          },
+          "points": {
+            "type": "number",
+            "description": "win×3 + draw×1."
+          }
+        },
+        "required": [
+          "competitorId",
+          "displayName",
+          "played",
+          "won",
+          "drawn",
+          "lost",
+          "scoreFor",
+          "scoreAgainst",
+          "diff",
+          "points"
+        ]
+      },
+      "StandingGroupDto": {
+        "type": "object",
+        "properties": {
+          "groupLabel": {
+            "type": "object",
+            "nullable": true,
+            "description": "Group label, or null for a single-table format."
+          },
+          "rows": {
+            "description": "Ranked by points → diff → scoreFor.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandingRowDto"
+            }
+          }
+        },
+        "required": [
+          "groupLabel",
+          "rows"
+        ]
+      },
+      "TournamentStandingsDto": {
+        "type": "object",
+        "properties": {
+          "tournamentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "format": {
+            "type": "string",
+            "description": "SINGLE_ELIM | ROUND_ROBIN | GROUP_KNOCKOUT"
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandingGroupDto"
+            }
+          }
+        },
+        "required": [
+          "tournamentId",
+          "format",
+          "groups"
+        ]
+      },
+      "TournamentListItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "format": {
+            "type": "string",
+            "description": "SINGLE_ELIM | ROUND_ROBIN | GROUP_KNOCKOUT"
+          },
+          "status": {
+            "type": "string",
+            "description": "DRAFT | SEEDED | IN_PROGRESS | COMPLETED | CANCELLED"
+          },
+          "stage": {
+            "type": "object",
+            "nullable": true,
+            "description": "GROUP or KNOCKOUT for group→knockout; null otherwise."
+          },
+          "competitorCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "format",
+          "status",
+          "stage",
+          "competitorCount"
         ]
       }
     }

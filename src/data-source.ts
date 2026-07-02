@@ -8,6 +8,7 @@ import { BudgetOrmEntity } from './modules/budget/database/budget.persistence.mo
 import { NotificationPreferenceOrmEntity } from './modules/notification/database/notification-preference.persistence.model';
 import { SurveyOrmEntity } from './modules/survey/database/survey.persistence.model';
 import { SurveyResponseOrmEntity } from './modules/survey/database/survey-response.persistence.model';
+import { TournamentOrmEntity } from './modules/competition/database/tournament.persistence.model';
 
 /** DataSource used by the TypeORM CLI for migrations (`pnpm migration:run`). */
 export const AppDataSource = new DataSource({
@@ -21,6 +22,7 @@ export const AppDataSource = new DataSource({
     NotificationPreferenceOrmEntity,
     SurveyOrmEntity,
     SurveyResponseOrmEntity,
+    TournamentOrmEntity,
   ],
   migrations: ['src/migrations/*.ts'],
   synchronize: false,

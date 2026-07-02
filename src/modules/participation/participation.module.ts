@@ -11,6 +11,7 @@ import { ListRegistrationsQueryHandler } from './queries/list-registrations/list
 import { ListRegistrationsHttpController } from './queries/list-registrations/list-registrations.http.controller';
 import { GetEventParticipationStatsQueryHandler } from './queries/event-participation-stats/event-participation-stats.query-handler';
 import { IsEventParticipantQueryHandler } from './queries/is-event-participant/is-event-participant.query-handler';
+import { GetEventRegistrationsQueryHandler } from './queries/get-event-registrations/get-event-registrations.query-handler';
 import { RegistrationRepository } from './database/registration.repository';
 import { RegistrationMapper } from './database/registration.mapper';
 
@@ -30,6 +31,7 @@ import { RegistrationMapper } from './database/registration.mapper';
     ListRegistrationsQueryHandler,
     GetEventParticipationStatsQueryHandler,
     IsEventParticipantQueryHandler,
+    GetEventRegistrationsQueryHandler,
     { provide: REGISTRATION_REPOSITORY, useClass: RegistrationRepository },
   ],
 })
