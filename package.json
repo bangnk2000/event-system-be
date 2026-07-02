@@ -20,8 +20,8 @@
     "map:check": "node scripts/gen-map.mjs && git diff --exit-code -- docs/architecture-map.md",
     "openapi:gen": "node -r ts-node/register -r tsconfig-paths/register scripts/gen-openapi.ts",
     "openapi:check": "pnpm openapi:gen && git diff --exit-code -- docs/openapi.json",
-    "migration:run": "typeorm-ts-node-commonjs migration:run -d src/data-source.ts",
-    "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/data-source.ts",
+    "migration:run": "node -r ts-node/register -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d src/data-source.ts",
+    "migration:revert": "node -r ts-node/register -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d src/data-source.ts",
     "prepare": "husky"
   },
   "dependencies": {
