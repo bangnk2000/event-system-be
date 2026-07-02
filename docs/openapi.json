@@ -1399,6 +1399,557 @@
           "budget"
         ]
       }
+    },
+    "/v1/events/{eventId}/surveys": {
+      "post": {
+        "description": "Organizer-only (cross-context check). Include at least one question.",
+        "operationId": "CreateSurveyHttpController_create_v1",
+        "parameters": [
+          {
+            "name": "eventId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSurveyRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Survey created; returns the survey id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed or invalid argument.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a post-event survey (DRAFT)",
+        "tags": [
+          "survey"
+        ]
+      },
+      "get": {
+        "description": "Organizers see all; other users see only OPEN surveys.",
+        "operationId": "ListEventSurveysHttpController_list_v1",
+        "parameters": [
+          {
+            "name": "eventId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SurveyListItemDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "List an event’s surveys",
+        "tags": [
+          "survey"
+        ]
+      }
+    },
+    "/v1/surveys/{surveyId}/open": {
+      "post": {
+        "description": "Organizer-only. Requires the survey to be DRAFT with at least one question.",
+        "operationId": "OpenSurveyHttpController_open_v1",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state (invalid transition, duplicate, locked).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Open a survey for responses",
+        "tags": [
+          "survey"
+        ]
+      }
+    },
+    "/v1/surveys/{surveyId}/close": {
+      "post": {
+        "description": "Organizer-only. Stops accepting responses; requires the survey to be OPEN.",
+        "operationId": "CloseSurveyHttpController_close_v1",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state (invalid transition, duplicate, locked).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Close a survey",
+        "tags": [
+          "survey"
+        ]
+      }
+    },
+    "/v1/surveys/{surveyId}/responses": {
+      "post": {
+        "description": "Eligible participants only (registrants, or attendees per the survey). Anonymous to organizers; one response per person. The survey must be OPEN.",
+        "operationId": "SubmitResponseHttpController_submit_v1",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitResponseRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Response recorded; returns its id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed or invalid argument.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state (invalid transition, duplicate, locked).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Submit a response to a survey",
+        "tags": [
+          "survey"
+        ]
+      }
+    },
+    "/v1/surveys/{surveyId}": {
+      "get": {
+        "operationId": "GetSurveyDetailHttpController_get_v1",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SurveyDetailDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get a survey with its questions (to fill in)",
+        "tags": [
+          "survey"
+        ]
+      }
+    },
+    "/v1/surveys/{surveyId}/results": {
+      "get": {
+        "description": "Anonymous aggregates + response rate. Only organizers of the event may view them.",
+        "operationId": "GetSurveyResultsHttpController_results_v1",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SurveyResultsDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get aggregated survey results (organizers only)",
+        "tags": [
+          "survey"
+        ]
+      }
     }
   },
   "info": {
@@ -1423,6 +1974,10 @@
     {
       "name": "notifications",
       "description": "Per-user notification preferences (opt in/out by type)"
+    },
+    {
+      "name": "survey",
+      "description": "Post-event surveys: create, open/close, submit (anonymous), aggregated results"
     }
   ],
   "servers": [],
@@ -2056,6 +2611,475 @@
           "totalActual",
           "variance",
           "items"
+        ]
+      },
+      "QuestionOptionRequestDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Stable key stored with the answer.",
+            "example": "yes"
+          },
+          "labelVi": {
+            "type": "string",
+            "example": "Có"
+          },
+          "labelJa": {
+            "type": "string",
+            "example": "はい"
+          }
+        },
+        "required": [
+          "key",
+          "labelVi"
+        ]
+      },
+      "SurveyQuestionRequestDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "RATING",
+              "SINGLE_CHOICE",
+              "MULTIPLE_CHOICE",
+              "TEXT"
+            ]
+          },
+          "promptVi": {
+            "type": "string",
+            "description": "Question text (Vietnamese).",
+            "example": "Bạn hài lòng đến mức nào?"
+          },
+          "promptJa": {
+            "type": "string",
+            "description": "Question text (Japanese)."
+          },
+          "required": {
+            "type": "boolean",
+            "default": false
+          },
+          "options": {
+            "description": "Required (≥2) for SINGLE_CHOICE / MULTIPLE_CHOICE; omit for RATING / TEXT.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuestionOptionRequestDto"
+            }
+          }
+        },
+        "required": [
+          "type",
+          "promptVi",
+          "required"
+        ]
+      },
+      "CreateSurveyRequestDto": {
+        "type": "object",
+        "properties": {
+          "titleVi": {
+            "type": "string",
+            "example": "Khảo sát sau sự kiện"
+          },
+          "titleJa": {
+            "type": "string"
+          },
+          "descriptionVi": {
+            "type": "string"
+          },
+          "descriptionJa": {
+            "type": "string"
+          },
+          "respondentScope": {
+            "type": "string",
+            "enum": [
+              "REGISTRANTS",
+              "ATTENDEES"
+            ],
+            "default": "REGISTRANTS"
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SurveyQuestionRequestDto"
+            }
+          }
+        },
+        "required": [
+          "titleVi",
+          "questions"
+        ]
+      },
+      "SurveyAnswerRequestDto": {
+        "type": "object",
+        "properties": {
+          "questionId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Id of the question being answered."
+          },
+          "ratingValue": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "For RATING questions."
+          },
+          "choiceKeys": {
+            "description": "Selected option key(s) for choice questions.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "textValue": {
+            "type": "string",
+            "description": "For TEXT questions."
+          }
+        },
+        "required": [
+          "questionId"
+        ]
+      },
+      "SubmitResponseRequestDto": {
+        "type": "object",
+        "properties": {
+          "answers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SurveyAnswerRequestDto"
+            }
+          }
+        },
+        "required": [
+          "answers"
+        ]
+      },
+      "SurveyOptionView": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "labelVi": {
+            "type": "string"
+          },
+          "labelJa": {
+            "type": "object",
+            "nullable": true
+          }
+        },
+        "required": [
+          "key",
+          "labelVi"
+        ]
+      },
+      "SurveyQuestionView": {
+        "type": "object",
+        "properties": {
+          "questionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "order": {
+            "type": "number"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "RATING",
+              "SINGLE_CHOICE",
+              "MULTIPLE_CHOICE",
+              "TEXT"
+            ]
+          },
+          "promptVi": {
+            "type": "string"
+          },
+          "promptJa": {
+            "type": "object",
+            "nullable": true
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SurveyOptionView"
+            }
+          }
+        },
+        "required": [
+          "questionId",
+          "order",
+          "type",
+          "promptVi",
+          "required",
+          "options"
+        ]
+      },
+      "SurveyDetailDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "titleVi": {
+            "type": "string"
+          },
+          "titleJa": {
+            "type": "object",
+            "nullable": true
+          },
+          "descriptionVi": {
+            "type": "object",
+            "nullable": true
+          },
+          "descriptionJa": {
+            "type": "object",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "OPEN",
+              "CLOSED"
+            ]
+          },
+          "respondentScope": {
+            "type": "string",
+            "enum": [
+              "REGISTRANTS",
+              "ATTENDEES"
+            ]
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SurveyQuestionView"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "eventId",
+          "titleVi",
+          "status",
+          "respondentScope",
+          "questions"
+        ]
+      },
+      "SurveyListItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "titleVi": {
+            "type": "string"
+          },
+          "titleJa": {
+            "type": "object",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "OPEN",
+              "CLOSED"
+            ]
+          },
+          "respondentScope": {
+            "type": "string",
+            "enum": [
+              "REGISTRANTS",
+              "ATTENDEES"
+            ]
+          },
+          "questionCount": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "titleVi",
+          "status",
+          "respondentScope",
+          "questionCount",
+          "createdAt"
+        ]
+      },
+      "RatingBucketView": {
+        "type": "object",
+        "properties": {
+          "rating": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "count": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "rating",
+          "count"
+        ]
+      },
+      "ChoiceCountView": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "labelVi": {
+            "type": "string"
+          },
+          "labelJa": {
+            "type": "object",
+            "nullable": true
+          },
+          "count": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "key",
+          "labelVi",
+          "count"
+        ]
+      },
+      "QuestionResultView": {
+        "type": "object",
+        "properties": {
+          "questionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "RATING",
+              "SINGLE_CHOICE",
+              "MULTIPLE_CHOICE",
+              "TEXT"
+            ]
+          },
+          "promptVi": {
+            "type": "string"
+          },
+          "promptJa": {
+            "type": "object",
+            "nullable": true
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "answerCount": {
+            "type": "number",
+            "description": "Number of responses that answered this question."
+          },
+          "average": {
+            "type": "object",
+            "nullable": true,
+            "description": "Mean rating (RATING only)."
+          },
+          "distribution": {
+            "description": "Rating distribution (RATING only).",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RatingBucketView"
+            }
+          },
+          "options": {
+            "description": "Votes per option (choice only).",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChoiceCountView"
+            }
+          },
+          "textAnswers": {
+            "description": "Free-text answers (TEXT only).",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "questionId",
+          "type",
+          "promptVi",
+          "required",
+          "answerCount"
+        ]
+      },
+      "SurveyResultsDto": {
+        "type": "object",
+        "properties": {
+          "surveyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "OPEN",
+              "CLOSED"
+            ]
+          },
+          "respondentScope": {
+            "type": "string",
+            "enum": [
+              "REGISTRANTS",
+              "ATTENDEES"
+            ]
+          },
+          "responded": {
+            "type": "number",
+            "description": "Number of submitted responses."
+          },
+          "eligible": {
+            "type": "number",
+            "description": "Number of people in the respondent scope (rate denominator)."
+          },
+          "responseRate": {
+            "type": "number",
+            "description": "responded / eligible, 2 decimals (0 when eligible is 0)."
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuestionResultView"
+            }
+          }
+        },
+        "required": [
+          "surveyId",
+          "eventId",
+          "status",
+          "respondentScope",
+          "responded",
+          "eligible",
+          "responseRate",
+          "questions"
         ]
       }
     }

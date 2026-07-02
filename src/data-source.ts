@@ -6,6 +6,8 @@ import { OutboxMessageOrmEntity } from './libs/outbox/outbox.entity';
 import { RegistrationOrmEntity } from './modules/participation/database/registration.persistence.model';
 import { BudgetOrmEntity } from './modules/budget/database/budget.persistence.model';
 import { NotificationPreferenceOrmEntity } from './modules/notification/database/notification-preference.persistence.model';
+import { SurveyOrmEntity } from './modules/survey/database/survey.persistence.model';
+import { SurveyResponseOrmEntity } from './modules/survey/database/survey-response.persistence.model';
 
 /** DataSource used by the TypeORM CLI for migrations (`pnpm migration:run`). */
 export const AppDataSource = new DataSource({
@@ -17,6 +19,8 @@ export const AppDataSource = new DataSource({
     RegistrationOrmEntity,
     BudgetOrmEntity,
     NotificationPreferenceOrmEntity,
+    SurveyOrmEntity,
+    SurveyResponseOrmEntity,
   ],
   migrations: ['src/migrations/*.ts'],
   synchronize: false,

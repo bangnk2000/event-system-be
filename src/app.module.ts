@@ -11,6 +11,7 @@ import { EventModule } from '@modules/event/event.module';
 import { ParticipationModule } from '@modules/participation/participation.module';
 import { NotificationModule } from '@modules/notification/notification.module';
 import { BudgetModule } from '@modules/budget/budget.module';
+import { SurveyModule } from '@modules/survey/survey.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { BudgetModule } from '@modules/budget/budget.module';
     ParticipationModule,
     NotificationModule,
     BudgetModule,
+    SurveyModule,
   ],
 })
 export class AppModule {}

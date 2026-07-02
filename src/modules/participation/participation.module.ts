@@ -10,6 +10,7 @@ import { CheckInHttpController } from './commands/check-in/check-in.http.control
 import { ListRegistrationsQueryHandler } from './queries/list-registrations/list-registrations.query-handler';
 import { ListRegistrationsHttpController } from './queries/list-registrations/list-registrations.http.controller';
 import { GetEventParticipationStatsQueryHandler } from './queries/event-participation-stats/event-participation-stats.query-handler';
+import { IsEventParticipantQueryHandler } from './queries/is-event-participant/is-event-participant.query-handler';
 import { RegistrationRepository } from './database/registration.repository';
 import { RegistrationMapper } from './database/registration.mapper';
 
@@ -28,6 +29,7 @@ import { RegistrationMapper } from './database/registration.mapper';
     CheckInService,
     ListRegistrationsQueryHandler,
     GetEventParticipationStatsQueryHandler,
+    IsEventParticipantQueryHandler,
     { provide: REGISTRATION_REPOSITORY, useClass: RegistrationRepository },
   ],
 })
