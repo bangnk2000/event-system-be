@@ -48,7 +48,20 @@
 | check-in | cmd | POST /registrations/:id/check-in | ✗ | `commands/check-in` |
 | register-for-event | cmd | POST /events/:eventId/registrations | ✗ | `commands/register-for-event` |
 | event-participation-stats | qry | (bus) | ✗ | `queries/event-participation-stats` |
+| is-event-participant | qry | (bus) | ✗ | `queries/is-event-participant` |
 | list-registrations | qry | GET /events/:eventId/registrations | ✗ | `queries/list-registrations` |
+
+### `survey`
+
+| Use case | Kind | Endpoint | Spec | Folder |
+|---|---|---|---|---|
+| close-survey | cmd | POST /surveys/:surveyId/close | ✗ | `commands/close-survey` |
+| create-survey | cmd | POST /events/:eventId/surveys | ✗ | `commands/create-survey` |
+| open-survey | cmd | POST /surveys/:surveyId/open | ✗ | `commands/open-survey` |
+| submit-response | cmd | POST /surveys/:surveyId/responses | ✗ | `commands/submit-response` |
+| get-survey-detail | qry | GET /surveys/:surveyId | ✗ | `queries/get-survey-detail` |
+| get-survey-results | qry | GET /surveys/:surveyId/results | ✗ | `queries/get-survey-results` |
+| list-event-surveys | qry | GET /events/:eventId/surveys | ✗ | `queries/list-event-surveys` |
 
 ## Domain events — name → raised in → consumed by (via outbox `@OnEvent`)
 
@@ -68,6 +81,10 @@
 | RegistrationClosedDomainEvent | `event/domain/event.entity.ts` | _none — no handler_ | `event/domain/events/registration-closed.domain-event.ts` |
 | RegistrationOpenedDomainEvent | `event/domain/event.entity.ts` | _none — no handler_ | `event/domain/events/registration-opened.domain-event.ts` |
 | RegistrationReopenedDomainEvent | `event/domain/event.entity.ts` | _none — no handler_ | `event/domain/events/registration-reopened.domain-event.ts` |
+| SurveyClosedDomainEvent | `survey/domain/survey.entity.ts` | _none — no handler_ | `survey/domain/events/survey-closed.domain-event.ts` |
+| SurveyCreatedDomainEvent | `survey/domain/survey.entity.ts` | _none — no handler_ | `survey/domain/events/survey-created.domain-event.ts` |
+| SurveyOpenedDomainEvent | `survey/domain/survey.entity.ts` | _none — no handler_ | `survey/domain/events/survey-opened.domain-event.ts` |
+| SurveyResponseSubmittedDomainEvent | `survey/domain/survey-response.entity.ts` | _none — no handler_ | `survey/domain/events/survey-response-submitted.domain-event.ts` |
 
 ## Cross-context contracts — `libs/contracts` (QueryBus, no module import)
 
@@ -75,8 +92,9 @@
 |---|---|---|---|
 | GetEventBudgetSummaryQuery | `budget/queries/event-budget-summary/event-budget-summary.query-handler.ts` | `event/queries/get-event-report/get-event-report.query-handler.ts` | `libs/contracts/budget/get-event-budget-summary.query.ts` |
 | IsEventOpenForRegistrationQuery | `event/queries/is-event-open-for-registration/is-event-open-for-registration.query-handler.ts` | `participation/commands/register-for-event/register-for-event.service.ts` | `libs/contracts/event/is-event-open-for-registration.query.ts` |
-| IsEventOrganizerQuery | `event/queries/is-event-organizer/is-event-organizer.query-handler.ts` | `budget/commands/create-budget/create-budget.service.ts` | `libs/contracts/event/is-event-organizer.query.ts` |
-| GetEventParticipationStatsQuery | `participation/queries/event-participation-stats/event-participation-stats.query-handler.ts` | `event/queries/get-event-report/get-event-report.query-handler.ts` | `libs/contracts/participation/get-event-participation-stats.query.ts` |
+| IsEventOrganizerQuery | `event/queries/is-event-organizer/is-event-organizer.query-handler.ts` | `budget/commands/create-budget/create-budget.service.ts`<br>`survey/commands/close-survey/close-survey.service.ts`<br>`survey/commands/create-survey/create-survey.service.ts`<br>`survey/commands/open-survey/open-survey.service.ts`<br>`survey/queries/get-survey-results/get-survey-results.query-handler.ts`<br>`survey/queries/list-event-surveys/list-event-surveys.query-handler.ts` | `libs/contracts/event/is-event-organizer.query.ts` |
+| GetEventParticipationStatsQuery | `participation/queries/event-participation-stats/event-participation-stats.query-handler.ts` | `event/queries/get-event-report/get-event-report.query-handler.ts`<br>`survey/queries/get-survey-results/get-survey-results.query-handler.ts` | `libs/contracts/participation/get-event-participation-stats.query.ts` |
+| IsEventParticipantQuery | `participation/queries/is-event-participant/is-event-participant.query-handler.ts` | `survey/commands/submit-response/submit-response.service.ts` | `libs/contracts/participation/is-event-participant.query.ts` |
 
 ---
-_Totals: 22 slices · 14 domain events · 4 contracts · 4 contexts._
+_Totals: 30 slices · 18 domain events · 5 contracts · 5 contexts._

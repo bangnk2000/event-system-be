@@ -6,6 +6,8 @@ import { EventOrmEntity } from '@modules/event/database/event.persistence.model'
 import { RegistrationOrmEntity } from '@modules/participation/database/registration.persistence.model';
 import { BudgetOrmEntity } from '@modules/budget/database/budget.persistence.model';
 import { NotificationPreferenceOrmEntity } from '@modules/notification/database/notification-preference.persistence.model';
+import { SurveyOrmEntity } from '@modules/survey/database/survey.persistence.model';
+import { SurveyResponseOrmEntity } from '@modules/survey/database/survey-response.persistence.model';
 
 /**
  * Composition-root database wiring (NOT under libs/ — it is allowed to know the concrete entities).
@@ -27,6 +29,8 @@ import { NotificationPreferenceOrmEntity } from '@modules/notification/database/
             RegistrationOrmEntity,
             BudgetOrmEntity,
             NotificationPreferenceOrmEntity,
+            SurveyOrmEntity,
+            SurveyResponseOrmEntity,
           ],
           synchronize: config.get<string>('NODE_ENV') !== 'production',
           logging: false,

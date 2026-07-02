@@ -9,6 +9,9 @@ export const configSchema = z.object({
   CHATWORK_API_TOKEN: z.string().optional(),
   CHATWORK_ROOM_ID: z.string().optional(),
   GOOGLE_CLIENT_ID: z.string().optional(),
+  // Secret for the anonymous survey respondent token (HMAC). Falls back to a dev default when unset;
+  // set a strong value in production so response tokens cannot be forged/correlated.
+  SURVEY_RESPONDENT_SALT: z.string().optional(),
 });
 
 export type AppConfig = z.infer<typeof configSchema>;
