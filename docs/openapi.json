@@ -481,6 +481,79 @@
         ]
       }
     },
+    "/v1/events/{eventId}/report": {
+      "get": {
+        "description": "Organizer-only. Aggregates participation (registrations/check-in) and budget (planned vs actual) for the event.",
+        "operationId": "GetEventReportHttpController_report_v1",
+        "parameters": [
+          {
+            "name": "eventId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventReportDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication (Google ID token / dev `x-user-id`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not allowed to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Post-event summary report",
+        "tags": [
+          "event"
+        ]
+      }
+    },
     "/v1/events/{eventId}/registrations": {
       "post": {
         "description": "Individual or team. Fails if the event is not open for registration.",
@@ -1580,6 +1653,145 @@
           "status",
           "startAt",
           "endAt"
+        ]
+      },
+      "EventReportEventDto": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string",
+            "description": "Vietnamese title."
+          },
+          "status": {
+            "type": "string",
+            "description": "Current lifecycle status."
+          },
+          "startAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "capacity": {
+            "type": "number",
+            "nullable": true,
+            "description": "Capacity cap, if any."
+          }
+        },
+        "required": [
+          "eventId",
+          "title",
+          "status",
+          "startAt",
+          "endAt",
+          "capacity"
+        ]
+      },
+      "EventReportParticipationDto": {
+        "type": "object",
+        "properties": {
+          "registered": {
+            "type": "number",
+            "description": "Active (REGISTERED) registrations."
+          },
+          "cancelled": {
+            "type": "number",
+            "description": "Cancelled registrations."
+          },
+          "checkedIn": {
+            "type": "number",
+            "description": "Registrations that checked in."
+          },
+          "individual": {
+            "type": "number",
+            "description": "Active individual registrations."
+          },
+          "team": {
+            "type": "number",
+            "description": "Active team registrations."
+          },
+          "checkInRate": {
+            "type": "number",
+            "description": "checkedIn / registered (0..1), 2 decimals."
+          }
+        },
+        "required": [
+          "registered",
+          "cancelled",
+          "checkedIn",
+          "individual",
+          "team",
+          "checkInRate"
+        ]
+      },
+      "EventReportBudgetDto": {
+        "type": "object",
+        "properties": {
+          "exists": {
+            "type": "boolean",
+            "description": "Whether a budget exists for the event."
+          },
+          "currency": {
+            "type": "object",
+            "nullable": true,
+            "description": "Budget currency code (null if no budget)."
+          },
+          "status": {
+            "type": "object",
+            "nullable": true,
+            "description": "DRAFT or FINALIZED (null if no budget)."
+          },
+          "totalPlanned": {
+            "type": "number",
+            "description": "Sum of planned amounts."
+          },
+          "totalActual": {
+            "type": "number",
+            "description": "Sum of actual amounts."
+          },
+          "variance": {
+            "type": "number",
+            "description": "Planned minus actual (positive = under budget)."
+          }
+        },
+        "required": [
+          "exists",
+          "currency",
+          "status",
+          "totalPlanned",
+          "totalActual",
+          "variance"
+        ]
+      },
+      "EventReportDto": {
+        "type": "object",
+        "properties": {
+          "event": {
+            "$ref": "#/components/schemas/EventReportEventDto"
+          },
+          "participation": {
+            "$ref": "#/components/schemas/EventReportParticipationDto"
+          },
+          "budget": {
+            "$ref": "#/components/schemas/EventReportBudgetDto"
+          },
+          "generatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the report was generated."
+          }
+        },
+        "required": [
+          "event",
+          "participation",
+          "budget",
+          "generatedAt"
         ]
       },
       "ParticipationMode": {
