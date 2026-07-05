@@ -5,7 +5,7 @@ NestJS 11 · TypeScript 5.7 · Hexagonal/DDD · CQRS (lightweight, 1 PostgreSQL)
 
 > Khởi đầu từ một walking skeleton (`create-event`), dự án nay đã có **6 bounded context**
 > chạy xuyên hết các tầng (Interface → Application → Domain → Infrastructure).
-> Design chi tiết + SRS nằm ở repo `knowledge-system/docs`; source code sống ở repo này.
+> Design chi tiết + SRS nằm ngay trong repo: [`docs/SRS-quan-ly-su-kien.md`](docs/SRS-quan-ly-su-kien.md) · [`docs/design/`](docs/design/) · nhật ký phiên làm việc: [`docs/sessions/`](docs/sessions/).
 
 ## Bounded contexts
 | Context | Vai trò | Aggregate | Tóm tắt |
@@ -83,4 +83,4 @@ Xác thực: `Authorization: Bearer <google-id-token>` khi có `GOOGLE_CLIENT_ID
 
 ## Còn thiếu (theo lộ trình)
 Google SSO production-hardening, i18n đầy đủ, adapter ChatWork/Calendar/Drive thật (đang stub khi chưa set env),
-kiểm tra event tồn tại khi đăng ký. Xem [`AGENTS.md`](AGENTS.md) và session logs ở `knowledge-system/docs/sessions/event-system-be/`.
+kiểm tra event tồn tại khi đăng ký. Xem [`AGENTS.md`](AGENTS.md) và session logs ở [`docs/sessions/`](docs/sessions/).
