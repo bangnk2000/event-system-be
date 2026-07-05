@@ -44,6 +44,9 @@ every slice → folder + endpoint, every domain event → raiser + consumer, eve
 full surface — do NOT grep the repo to rediscover it. For a task, open only the one slice folder + its
 aggregate entity; delegate any wider search to a subagent. After adding/removing a slice, event, or
 contract, run `pnpm map` (CI's `map:check` fails if the committed map is stale).
+Design intent lives in-repo too: [`docs/SRS-quan-ly-su-kien.md`](docs/SRS-quan-ly-su-kien.md) (requirements),
+[`docs/design/`](docs/design/README.md) (tactical DDD per context + ADRs), [`docs/sessions/`](docs/sessions/session-summary.md)
+(handoff + progress checklist — read `session-summary.md` when continuing multi-session work).
 
 ## Commands
 ```
