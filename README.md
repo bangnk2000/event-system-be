@@ -24,8 +24,8 @@ and reliable event publishing** on a codebase that is large enough for those pat
   then an `OutboxRelay` publishes them, so a crash cannot lose an event or send one for a change that rolled back.
 - **No cross-module imports.** Contexts talk only through command/query contracts (`src/libs/contracts/`) or domain
   events. The rule is **enforced in CI** by dependency-cruiser and ESLint boundaries, not just written down.
-- **Design first.** The SRS and a design doc for every aggregate (invariants, state transitions) were written
-  before the code. See [`docs/design/`](docs/design/).
+- **Documented design.** The repo includes the SRS and a design doc for each aggregate covering invariants and state
+  transitions. See [`docs/design/`](docs/design/).
 - **Built with AI coding agents under explicit rules.** [`AGENTS.md`](AGENTS.md) sets the architecture rules and
   workflow for agents. The CI gates below are what keeps their output honest.
 
